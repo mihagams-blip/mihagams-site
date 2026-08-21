@@ -24,26 +24,36 @@
 
   var ICON_PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>';
   var ICON_PAUSE = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1h3v10H2zm5 0h3v10H7z" fill="currentColor"/></svg>';
+  var ICON_PLAY_LG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2l16 10L5 22z" fill="currentColor"/></svg>';
+  var ICON_PAUSE_LG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2h6v20H4zm10 0h6v20h-6z" fill="currentColor"/></svg>';
 
   var audio = null, actx = null, analyser = null, freq = null;
   var playing = null, raf = null;
 
   /* ------------------------------------------- rows are baked into the
      HTML (tools/bake.mjs); attach behavior to the existing buttons */
+  /* A track can have two controls — the featured cover card and its list
+     row. Both carry data-track, so they're collected per id and flipped
+     together; whichever one you pressed keeps focus. */
   var buttons = {};
-  listEl.querySelectorAll(".track").forEach(function (btn) {
-    buttons[btn.dataset.track] = btn;
-    btn.addEventListener("click", function () { toggle(btn.dataset.track); });
+  document.querySelectorAll(".track[data-track]").forEach(function (btn) {
+    var id = btn.dataset.track;
+    (buttons[id] = buttons[id] || []).push(btn);
+    btn.addEventListener("click", function () { toggle(id); });
   });
 
-  /* in-place state flip — never rebuilds the list */
+  /* in-place state flip — never rebuilds markup, so focus survives */
   function setPlaying(id) {
     Object.keys(buttons).forEach(function (k) {
       var on = k === id;
-      var btn = buttons[k];
-      btn.classList.toggle("is-playing", on);
-      btn.setAttribute("aria-pressed", on ? "true" : "false");
-      btn.querySelector(".t-btn").innerHTML = on ? ICON_PAUSE : ICON_PLAY;
+      buttons[k].forEach(function (btn) {
+        btn.classList.toggle("is-playing", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        var icon = btn.querySelector(".t-btn");
+        if (icon) icon.innerHTML = on
+          ? (icon.classList.contains("fc-play") ? ICON_PAUSE_LG : ICON_PAUSE)
+          : (icon.classList.contains("fc-play") ? ICON_PLAY_LG : ICON_PLAY);
+      });
     });
     playing = id;
   }

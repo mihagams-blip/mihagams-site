@@ -155,15 +155,23 @@ const PROJECTS = [
 ];
 
 /* Audio is preload:none — nothing downloads until first play.
-   All of these live on Suno too: SITE.sunoProfile. */
+   All of these live on Suno too: SITE.sunoProfile.
+
+   featured: true  → gets a cover card above the list (keep it to four;
+                     the row also stays in the list, one play state shared).
+   cover:          → "assets/covers/<id>.webp", square, 600x600, <=70 KB.
+                     null renders the typographic placeholder tile. */
 const TRACKS = [
   { id: "night-grid-advance", title: "Night Grid Advance", genre: "synthwave",
+    featured: true, cover: null, coverAlt: null,
     duration: "1:28", src: "assets/audio/night-grid-advance.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: "neon-city" },
   { id: "kintsugi-pulse", title: "Kintsugi Pulse", genre: "ambient",
+    featured: true, cover: null, coverAlt: null,
     duration: "2:48", src: "assets/audio/kintsugi-pulse.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: "senbon-torii" },
   { id: "celestial-folk-suite", title: "Celestial Folk Suite", genre: "folk orchestral",
+    featured: true, cover: null, coverAlt: null,
     duration: "2:49", src: "assets/audio/celestial-folk-suite.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: "minas-tirith" },
   { id: "cardboard-dynasty", title: "Cardboard Dynasty", genre: "indie rock",
@@ -176,6 +184,7 @@ const TRACKS = [
     duration: "4:34", src: "assets/audio/hikari-no-hoteishiki.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: null },
   { id: "the-fire-is-coming", title: "The Fire Is Coming", genre: "epic",
+    featured: true, cover: null, coverAlt: null,
     duration: "4:12", src: "assets/audio/the-fire-is-coming.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: null },
   { id: "hold-the-line", title: "Hold the Line", genre: "anthem",

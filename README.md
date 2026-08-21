@@ -11,7 +11,7 @@ files. Node is not required to run or deploy.
 
 | Piece | Notes |
 | --- | --- |
-| `js/data.js` | All content: 13 projects (each with a personal "why"), 5 Suno tracks, the bookshelf. HUD counts are computed from these arrays. |
+| `js/data.js` | All content: projects (each with a personal "why"), Suno tracks, the bookshelf. HUD counts are computed from these arrays. |
 | `js/main.js` | Hero video deferral, sticky nav + scrollspy, project cards, shelf, reveal-on-scroll. |
 | `js/audio.js` | Web Audio player + skyline equaliser. Renders the list once; play state mutates in place so keyboard focus survives. |
 | `assets/neon-city.mp4` | The hero loop — 1.76 MB H.264 (96 frames @ 12 fps), transcoded from a 10.6 MB animated WebP. |
@@ -48,3 +48,10 @@ keeps CLS at a deterministic 0 and the content visible to crawlers. Adding a boo
 `BOOKS` (the shelf wraps and scales; `note: null` renders "Notes in
 progress"). Adding a track = one object in `TRACKS` plus an mp3 in
 `assets/audio/`. Project cards follow the same pattern.
+
+**Featured tracks.** Four tracks carry `featured: true` and get a cover card
+above the list. Move the flag to change which four. Drop the artwork in as
+`assets/covers/<id>.webp` (square, 600×600, ≤70 KB) and set `cover` +
+`coverAlt` on that track; until then the card shows a typographic
+placeholder. A featured track keeps its list row — both controls share one
+play state, so pressing either shows pause on both.

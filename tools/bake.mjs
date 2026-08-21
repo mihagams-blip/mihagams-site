@@ -46,6 +46,24 @@ const showall = rest.length > 4
 /* ---- tracks ---- */
 const titleOf = Object.fromEntries(PROJECTS.map((p) => [p.id, p.title]));
 const ICON_PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>';
+const ICON_PLAY_LG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2l16 10L5 22z" fill="currentColor"/></svg>';
+
+/* Featured tracks get a cover card; each also keeps its list row below, and
+   both buttons carry data-track so they share one play state. */
+const featuredTracks = TRACKS.filter((t) => t.featured).map((tr) => {
+  const label = `Play ${tr.title}${tr.genre ? ' — ' + tr.genre : ''}`;
+  const art = tr.cover
+    ? `<img src="${tr.cover}" width="600" height="600" alt="${esc(tr.coverAlt || tr.title + ' cover art')}" loading="lazy" decoding="async">`
+    : `<span class="cover-ph" aria-hidden="true"><i>${esc(tr.title.slice(0, 1))}</i></span>`;
+  const chip = tr.projectId && titleOf[tr.projectId]
+    ? `<span class="fc-for">for ${esc(titleOf[tr.projectId])}</span>` : '';
+  return `<li class="fcard">` +
+    `<button class="fcard-btn track" data-track="${tr.id}" aria-pressed="false" aria-label="${esc(label)}">` +
+    `<span class="fc-art">${art}<span class="fc-play t-btn" aria-hidden="true">${ICON_PLAY_LG}</span></span>` +
+    `<span class="fc-meta"><span class="fc-title">${esc(tr.title)}</span>` +
+    `<span class="fc-sub">${esc(tr.genre || '')}${tr.genre ? ' · ' : ''}${tr.duration}</span></span>` +
+    `</button>${chip}</li>`;
+}).join('\n');
 const tracks = TRACKS.map((tr) => {
   const label = `Play ${tr.title}${tr.genre ? " — " + tr.genre : ""}`;
   const chip = tr.projectId && titleOf[tr.projectId] ? `<span class="t-for">for ${esc(titleOf[tr.projectId])}</span>` : "";
@@ -77,7 +95,9 @@ put("hud", hud);
 put("featured", featured);
 put("grid", grid);
 put("showall", showall);
+put("featuredTracks", featuredTracks);
 put("tracks", tracks);
 put("shelf", shelf);
 writeFileSync(join(root, "index.html"), html);
-console.log(`baked: ${PROJECTS.length} projects (${live} live), ${TRACKS.length} tracks, ${BOOKS.length} books`);
+const nf = TRACKS.filter((t) => t.featured).length;
+console.log(`baked: ${PROJECTS.length} projects (${live} live), ${TRACKS.length} tracks (${nf} featured), ${BOOKS.length} books`);
