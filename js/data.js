@@ -5,12 +5,12 @@
 const SITE = {
   name: "Miha Gams",
   brand: "GAM(E)S",
-  tagline: "Games, sites and music — built with AI.",
+  tagline: "A game, a site, a song — AI didn't give me the ideas, it gave me the hands to build them.",
   url: "https://mihagams.vercel.app/",
   github: "https://github.com/mihagams-blip",
   linkedin: null,        // dormant slot
   email: "mihagams@gmail.com",
-  sunoProfile: null,     // dormant slot
+  sunoProfile: "https://suno.com/@mihagams",
   youtube: null          // dormant slot
 };
 
@@ -26,7 +26,7 @@ const PROJECTS = [
     url: "https://steel-signal-n43n.vercel.app/",
     repo: "https://github.com/mihagams-blip/steel-signal",
     img: "assets/projects/steel-signal.webp",
-    imgAlt: "Mission briefing 'Signal on the Vovcha' over a dark tactical map."
+    imgAlt: "Steel Signal in play: hex map of the Vovcha river with the order of battle, sector minimap and comms log."
   },
   {
     id: "berem", featured: true,
@@ -45,7 +45,7 @@ const PROJECTS = [
     desc: "A basketball GM dynasty card game — draft, trade and coach a Slovenian club through the seasons.",
     why: "Basketball plus spreadsheets is my comfort food. I wanted the GM fantasy without the 4 GB install.",
     tags: ["React", "cards", "basketball"],
-    url: "https://frontoffice2.vercel.app/",
+    url: "https://front-office-tau.vercel.app/",
     repo: "https://github.com/mihagams-blip/front-office",
     img: "assets/projects/front-office.webp",
     imgAlt: "Front Office game screen with a cream-colored management dashboard."
@@ -72,17 +72,6 @@ const PROJECTS = [
     repo: "https://github.com/mihagams-blip/bad-orbit",
     img: "assets/projects/bad-orbit.webp",
     imgAlt: "Low-poly planet with the Bad Orbit title and a Defend button."
-  },
-  {
-    id: "dino-akademija",
-    title: "Dino Akademija", year: 2026, kind: "Game", group: "games",
-    desc: "A night-expedition learning game for young paleontologists — phone-first, works offline.",
-    why: "My six-year-old wanted to be a paleontologist. No cheap dopamine here: the skeleton comes alive only at ten out of ten.",
-    tags: ["kids", "education", "offline"],
-    url: "https://mihagams-blip.github.io/dino-akademija/",
-    repo: "https://github.com/mihagams-blip/dino-akademija",
-    img: "assets/projects/dino-akademija.webp",
-    imgAlt: "Night camp menu with a tent, campfire and expedition choices."
   },
   {
     id: "tvoj-premik",
@@ -144,13 +133,13 @@ const PROJECTS = [
   {
     id: "vidim-cilj",
     title: "Vidim cilj", year: 2026, kind: "Website", group: "web",
-    desc: "Site for a charity bringing sport to the visually impaired — accessibility-first by definition.",
-    why: "For athletes who can't see the finish line and aim for it anyway. The most accessible page I know how to build.",
-    tags: ["charity", "accessibility"],
+    desc: "Site for a charity running free sport programmes for blind and visually impaired people since 2011.",
+    why: "For athletes who can't see the finish line and aim for it anyway. Contrast, text size and focus order are the whole point here, not a checkbox.",
+    tags: ["charity", "accessibility", "WCAG"],
     url: null,
     repo: null,
     img: "assets/projects/vidim-cilj.webp",
-    imgAlt: "Blue and gold charity site with a bold headline."
+    imgAlt: "Vidim cilj homepage with the headline Skupaj vidimo cilj beside an illustration of a tandem bike by the sea."
   },
   {
     id: "igrica-raketa",
@@ -165,7 +154,8 @@ const PROJECTS = [
   }
 ];
 
-/* Audio is preload:none — nothing downloads until first play. */
+/* Audio is preload:none — nothing downloads until first play.
+   All of these live on Suno too: SITE.sunoProfile. */
 const TRACKS = [
   { id: "night-grid-advance", title: "Night Grid Advance", genre: "synthwave",
     duration: "1:28", src: "assets/audio/night-grid-advance.mp3",
@@ -176,12 +166,48 @@ const TRACKS = [
   { id: "celestial-folk-suite", title: "Celestial Folk Suite", genre: "folk orchestral",
     duration: "2:49", src: "assets/audio/celestial-folk-suite.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: "minas-tirith" },
+  { id: "cardboard-dynasty", title: "Cardboard Dynasty", genre: "indie rock",
+    duration: "0:51", src: "assets/audio/cardboard-dynasty.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: "front-office" },
   { id: "the-gilded-march", title: "The Gilded March", genre: "epic march",
     duration: "3:10", src: "assets/audio/the-gilded-march.mp3",
     sunoUrl: null, youtubeUrl: null, projectId: null },
-  { id: "cardboard-dynasty", title: "Cardboard Dynasty", genre: null,
-    duration: "0:51", src: "assets/audio/cardboard-dynasty.mp3",
-    sunoUrl: null, youtubeUrl: null, projectId: "front-office" }
+  { id: "hikari-no-hoteishiki", title: "\u5149\u306e\u65b9\u7a0b\u5f0f", genre: "J-pop",
+    duration: "4:34", src: "assets/audio/hikari-no-hoteishiki.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "the-fire-is-coming", title: "The Fire Is Coming", genre: "epic",
+    duration: "4:12", src: "assets/audio/the-fire-is-coming.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "hold-the-line", title: "Hold the Line", genre: "anthem",
+    duration: "3:32", src: "assets/audio/hold-the-line.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "blade-smile", title: "Blade Smile", genre: "dark pop",
+    duration: "3:29", src: "assets/audio/blade-smile.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "the-witch-hunter", title: "The Witch Hunter", genre: "folk metal",
+    duration: "3:22", src: "assets/audio/the-witch-hunter.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "we-hold-the-spark", title: "We Hold the Spark", genre: "anthem",
+    duration: "3:12", src: "assets/audio/we-hold-the-spark.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "im-the-only-one", title: "I'm the Only One", genre: "rock",
+    duration: "3:08", src: "assets/audio/im-the-only-one.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "fuego-y-piel", title: "Fuego y Piel", genre: "latin",
+    duration: "3:03", src: "assets/audio/fuego-y-piel.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "umdetsi-stu-det", title: "Umdetsi-stu-det", genre: "experimental",
+    duration: "3:01", src: "assets/audio/umdetsi-stu-det.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "the-last-echo", title: "The Last Echo", genre: "cinematic",
+    duration: "2:47", src: "assets/audio/the-last-echo.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "eclipse-of-the-spiral-sun", title: "Eclipse of the Spiral Sun", genre: "prog",
+    duration: "2:39", src: "assets/audio/eclipse-of-the-spiral-sun.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null },
+  { id: "stiff-upper-lip", title: "Stiff Upper Lip", genre: "rock",
+    duration: "2:28", src: "assets/audio/stiff-upper-lip.mp3",
+    sunoUrl: null, youtubeUrl: null, projectId: null }
 ];
 
 /* Sample entries (Miha will replace/extend — the shelf is built to grow).

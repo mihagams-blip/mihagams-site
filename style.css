@@ -145,9 +145,11 @@ h2{
 }
 
 .tagline{
-  margin:0; max-width:40ch; font-size:clamp(15px,1.7vw,19px);
+  margin:0; max-width:46ch; font-size:clamp(15px,1.7vw,19px);
+  line-height:1.5;
   text-shadow:0 2px 16px rgba(10,7,16,.9);
 }
+.tag-em{ color:var(--sodium-hi) }
 .hero-nav{ display:flex; gap:10px; flex-wrap:wrap; margin-top:4px }
 .hero-nav a{
   color:var(--text); text-decoration:none;
@@ -205,7 +207,9 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 
 .featured,.grid{ margin:0; padding:0; list-style:none }
 .tracks{ margin:0; padding:0; list-style:none }
-.credit{ font-family:var(--mono); font-size:11px; color:var(--dim); margin:14px 0 0 }
+.credit{ font-family:var(--mono); font-size:12px; color:var(--dim); margin:16px 0 0 }
+.credit a{ color:var(--magenta); text-decoration:none; border-bottom:1px solid rgba(217,107,168,.35) }
+.credit a:hover{ color:var(--sodium-hi); border-bottom-color:var(--sodium-hi) }
 #viz{ width:100%; height:120px; border:1px solid var(--edge); background:var(--ink-2) }
 .notepanel{ border:1px solid var(--edge); background:var(--ink-2); padding:18px; max-width:70ch }
 .showall{
@@ -216,14 +220,40 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 
 /* ---------------- OUTRO ---------------- */
 .outro{
-  display:flex; gap:24px; align-items:center; flex-wrap:wrap;
+  display:flex; gap:32px; align-items:center; flex-wrap:wrap;
   padding:clamp(40px,7vw,80px) var(--gutter);
   border-top:1px solid var(--edge);
   background:
     linear-gradient(120deg, rgba(232,135,58,.07), rgba(217,107,168,.07) 50%, rgba(157,190,242,.07)),
     var(--ink-2);
 }
-.avatar{ width:120px; height:auto; border:1px solid var(--edge) }
+/* ---- the chamois ---- */
+.gams-wrap{ display:flex; flex-direction:column; align-items:center; gap:8px; flex:none }
+.gams3d{
+  position:relative;
+  width:240px; height:320px;
+  border:1px solid var(--edge);
+  background:
+    radial-gradient(60% 50% at 50% 62%, rgba(232,135,58,.16), transparent 70%),
+    linear-gradient(180deg, rgba(157,190,242,.06), rgba(217,107,168,.06));
+  cursor:grab; touch-action:pan-y;
+}
+.gams3d.grabbing{ cursor:grabbing }
+.gams3d canvas{ display:block; position:relative; z-index:1 }
+.avatar{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:contain; transition:opacity 500ms ease;
+}
+.gams3d.live .avatar{ opacity:0 }
+.gams-hint{
+  margin:0; font-family:var(--mono); font-size:11px;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--dim); opacity:0;
+  transition:opacity 300ms ease;
+}
+.gams3d.live + .gams-hint{ opacity:1 }
+@media (max-width:600px){
+  .gams3d{ width:180px; height:240px }
+}
 .outro-body{ max-width:56ch }
 .outro-line{ margin:0 0 14px; font-size:clamp(15px,1.8vw,18px) }
 .links{ display:flex; gap:10px; flex-wrap:wrap }
@@ -300,7 +330,10 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 }
 
 /* ---------------- TRACKS ---------------- */
-.tracks{ margin-top:14px }
+.tracks{ margin-top:14px; max-height:min(560px, 70vh); overflow-y:auto; overscroll-behavior:contain }
+.tracks::-webkit-scrollbar{ width:8px }
+.tracks::-webkit-scrollbar-track{ background:var(--ink-2) }
+.tracks::-webkit-scrollbar-thumb{ background:var(--edge) }
 .trackrow{
   display:flex; align-items:center; gap:12px;
   border:1px solid var(--edge); border-top:none;
