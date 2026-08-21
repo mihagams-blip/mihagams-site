@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GAM(E)S — Miha Gams</title>
+<meta name="description" content="Miha Gams builds games, sites and music with AI. Thirteen builds, one city: play them live, hear the soundtrack, browse the shelf.">
+<link rel="canonical" href="https://mihagams.vercel.app/">
+<meta property="og:title" content="GAM(E)S — Miha Gams">
+<meta property="og:description" content="Games, sites and music — built with AI.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mihagams.vercel.app/">
+<meta property="og:image" content="https://mihagams.vercel.app/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230A0710'/><rect x='5' y='12' width='5' height='16' fill='%23E8873A'/><rect x='13' y='6' width='6' height='22' fill='%23D96BA8'/><rect x='22' y='15' width='5' height='13' fill='%239DBEF2'/></svg>">
+<link rel="preload" as="font" type="font/woff2" href="fonts/bigshoulders-display.woff2" crossorigin>
+<link rel="preload" as="image" href="assets/poster.webp" fetchpriority="high">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"Person","name":"Miha Gams","url":"https://mihagams.vercel.app/",
+  "sameAs":["https://github.com/mihagams-blip"]},
+ {"@type":"WebSite","name":"GAM(E)S","url":"https://mihagams.vercel.app/"}]}
+</script>
+</head>
+<body>
+<a class="skip" href="#projects">Skip to projects</a>
+
+<header class="hero" id="top">
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="plate" id="plate">
+    <img class="poster" src="assets/poster.webp" width="1280" height="720" alt="" aria-hidden="true">
+    <video class="loop" id="loop" width="1280" height="720" muted loop playsinline autoplay
+           preload="none" poster="assets/poster.webp" data-src="assets/neon-city.mp4"
+           aria-label="Animated night cityscape: towers lit amber and magenta, searchlights sweeping, windows flickering."></video>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+  </div>
+
+  <div class="overlay">
+    <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Personal site · Slovenia</p>
+    <h1 class="wordmark">
+      <span class="l1">Miha</span>
+      <span class="l2">Gam<span class="neon-e" aria-hidden="true">(e)</span><span class="sr-only">e</span>s</span>
+    </h1>
+    <p class="tagline">Games, sites and music — built with AI.</p>
+    <nav class="hero-nav" aria-label="Sections">
+      <a href="#projects">Projects</a>
+      <a href="#music">Music</a>
+      <a href="#books">Books</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hud" id="hud" aria-label="Site stats"><!-- filled by main.js from data --></div>
+
+<nav class="stickynav" id="stickynav" aria-label="Main">
+  <a class="mark" href="#top" aria-label="Back to top">
+    <i style="background:var(--sodium)"></i><i style="background:var(--magenta)"></i><i style="background:var(--beam)"></i>
+  </a>
+  <a href="#projects" data-spy="projects">Projects</a>
+  <a href="#music" data-spy="music">Music</a>
+  <a href="#books" data-spy="books">Books</a>
+</nav>
+
+<main>
+  <section id="projects" aria-labelledby="h-projects" class="s-projects">
+    <p class="eyebrow accent-beam">01 / The Lab</p>
+    <h2 id="h-projects">Projects</h2>
+    <div id="featured" class="featured"></div>
+    <div id="grid-wrap">
+      <ul id="grid" class="grid"></ul>
+      <button id="showall" class="showall" hidden aria-expanded="false">Show all <span id="showall-n"></span></button>
+    </div>
+  </section>
+
+  <section id="music" aria-labelledby="h-music" class="s-music">
+    <p class="eyebrow accent-mag">02 / The Soundtrack</p>
+    <h2 id="h-music">Music</h2>
+    <canvas id="viz" width="900" height="120" aria-hidden="true"></canvas>
+    <p class="viz-alt sr-only">Audio visualizer</p>
+    <ul id="tracks" class="tracks"></ul>
+    <p class="credit">Made with Suno.</p>
+  </section>
+
+  <section id="books" aria-labelledby="h-books" class="s-books">
+    <p class="eyebrow accent-sodium">03 / The Shelf</p>
+    <h2 id="h-books">Books</h2>
+    <div id="shelf" class="shelf"></div>
+    <div id="note" class="notepanel" aria-live="polite" hidden></div>
+  </section>
+</main>
+
+<footer class="outro" id="contact">
+  <img class="avatar" src="assets/gams.webp" width="120" height="160" alt="Voxel statue of a chamois, rendered in Blender." loading="lazy">
+  <div class="outro-body">
+    <p class="outro-line">Gams is Slovenian for chamois — and one letter short of games. This site is what I build for the people and ideas I love.</p>
+    <div class="links">
+      <a href="https://github.com/mihagams-blip" rel="me">GitHub</a>
+      <a href="mailto:mihagams@gmail.com">Email</a>
+    </div>
+    <p class="colophon">© 2026 Miha Gams · Built with Claude Code</p>
+  </div>
+</footer>
+
+<script src="js/data.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
