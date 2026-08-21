@@ -266,11 +266,22 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 .colophon{ margin:16px 0 0; font-family:var(--mono); font-size:12px; color:var(--dim) }
 
 /* ---------------- PROJECT CARDS ---------------- */
+/* The featured row mirrors the music cover cards: one up, two across, then
+   four in a row once there is room — a 15-inch laptop lands in the last
+   band, so both sections read as one system. */
 .featured{
   display:grid; grid-template-columns:1fr;
   gap:14px; margin-bottom:26px;
 }
-@media (min-width:761px){ .featured{ grid-template-columns:1fr 1fr } }
+@media (min-width:601px){ .featured{ grid-template-columns:repeat(2,1fr) } }
+@media (min-width:1100px){
+  .featured{ grid-template-columns:repeat(4,1fr) }
+  /* at quarter width the big card's type has to come down to the grid's */
+  .card--big h3{ font-size:19px }
+  .card--big .cdesc{ font-size:13.5px }
+  /* keep the grid below denser so the hierarchy still reads */
+  .grid{ grid-template-columns:repeat(auto-fill,minmax(210px,1fr)) }
+}
 .grid{
   display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
   gap:12px;
@@ -427,9 +438,10 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 /* ---------------- FEATURED TRACKS ---------------- */
 .fcards{
   list-style:none; margin:0 0 26px; padding:0;
-  display:grid; grid-template-columns:repeat(2,1fr); gap:12px;
+  display:grid; grid-template-columns:1fr; gap:12px;
 }
-@media (min-width:900px){ .fcards{ grid-template-columns:repeat(4,1fr) } }
+@media (min-width:601px){ .fcards{ grid-template-columns:repeat(2,1fr) } }
+@media (min-width:1100px){ .fcards{ grid-template-columns:repeat(4,1fr) } }
 .fcard{ position:relative; display:flex; flex-direction:column }
 .fcard-btn{
   display:flex; flex-direction:column; gap:0; width:100%;
