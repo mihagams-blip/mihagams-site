@@ -330,7 +330,7 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 }
 
 /* ---------------- TRACKS ---------------- */
-.tracks{ margin-top:14px; max-height:min(560px, 70vh); overflow-y:auto; overscroll-behavior:contain }
+.tracks{ margin-top:14px; max-height:min(620px, 72vh); overflow-y:auto; overscroll-behavior:contain }
 .tracks::-webkit-scrollbar{ width:8px }
 .tracks::-webkit-scrollbar-track{ background:var(--ink-2) }
 .tracks::-webkit-scrollbar-thumb{ background:var(--edge) }
