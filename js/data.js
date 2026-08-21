@@ -107,6 +107,17 @@ const PROJECTS = [
     imgAlt: "White voxel citadel rising in terraced rings against black."
   },
   {
+    id: "long-front",
+    title: "The Long Front", year: 2026, kind: "Game", group: "games",
+    desc: "Grand strategy on the Russia\u2013Ukraine war in the shape of Hearts of Iron: continuous time you pause, 66 real regions, and a front line the simulation draws rather than a designer.",
+    why: "I kept reading about a war fought with drones, shells and factories, and wanted to understand it from the inside \u2014 where cutting one road starves a salient without a shot fired.",
+    tags: ["TypeScript", "grand strategy", "canvas"],
+    url: null,
+    repo: null,
+    img: "assets/projects/long-front.webp",
+    imgAlt: "The Long Front in play: a map from Kharkiv to Crimea with unit counters, an amber front line and an event log."
+  },
+  {
     id: "senbon-torii",
     title: "Senbon Torii", year: 2026, kind: "Website", group: "web",
     desc: "A first-person walk through a thousand vermilion gates, with light that shifts as you go.",
