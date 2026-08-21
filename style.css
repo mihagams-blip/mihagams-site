@@ -6,11 +6,6 @@
   src:url("fonts/bigshoulders-display.woff2") format("woff2");
   font-weight:800; font-display:swap;
 }
-@font-face{
-  font-family:"ArchivoCond";
-  src:url("fonts/archivo-display.woff2") format("woff2");
-  font-weight:800; font-display:swap;
-}
 /* CLS guard: metric-adjusted local fallback for the display role */
 @font-face{
   font-family:"display-fallback";
@@ -29,9 +24,6 @@
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
   --gutter:clamp(20px,5vw,64px);
 }
-/* A/B: add class "font-b" on <html> to compare Archivo */
-html.font-b{ --display:"ArchivoCond","display-fallback","Arial Narrow",sans-serif; }
-
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--ink); color:var(--text);
