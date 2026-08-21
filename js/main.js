@@ -70,24 +70,19 @@
     var rest = PROJECTS.filter(function (p) { return !p.featured; });
     featEl.innerHTML = feat.map(function (p) { return projectCard(p, true); }).join("");
     gridEl.innerHTML = rest.map(function (p) { return projectCard(p, false); }).join("");
-    /* mobile: collapse grid past 4 behind an expander */
+    /* mobile: cards past 4 are collapsed by CSS (no JS at load — that
+       raced first paint and caused a layout shift); JS only expands */
     var btn = document.getElementById("showall");
-    var extra = [].slice.call(gridEl.children, 4);
-    if (btn && extra.length) {
+    if (btn && gridEl.children.length > 4) {
       document.getElementById("showall-n").textContent = rest.length;
-      var mq = matchMedia("(max-width: 760px)");
-      var apply = function () {
-        var collapse = mq.matches && btn.getAttribute("aria-expanded") !== "true";
-        extra.forEach(function (li) { li.hidden = collapse; });
-        btn.hidden = !mq.matches || btn.getAttribute("aria-expanded") === "true";
-      };
+      btn.hidden = false;   /* CSS still hides it on desktop */
       btn.addEventListener("click", function () {
+        gridEl.classList.add("expanded");
         btn.setAttribute("aria-expanded", "true");
-        apply();
-        extra[0].querySelector("img, h3").closest(".card").scrollIntoView({ block: "nearest" });
+        btn.hidden = true;
+        var fifth = gridEl.children[4];
+        if (fifth) fifth.scrollIntoView({ block: "nearest" });
       });
-      mq.addEventListener ? mq.addEventListener("change", apply) : mq.addListener(apply);
-      apply();
     }
   }
 

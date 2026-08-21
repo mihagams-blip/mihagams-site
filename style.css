@@ -163,7 +163,7 @@ h2{
   padding:12px var(--gutter);
   border-top:1px solid var(--edge); border-bottom:1px solid var(--edge);
   background:var(--ink-2);
-  font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+  font-family:var(--mono); font-size:12px; letter-spacing:.14em;
   font-variant-numeric:tabular-nums;
 }
 .hud span{ border:1px solid var(--edge); padding:4px 12px; color:var(--dim); text-transform:uppercase }
@@ -231,7 +231,7 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
   letter-spacing:.18em; text-transform:uppercase;
 }
 .links a:hover{ border-color:var(--beam) }
-.colophon{ margin:16px 0 0; font-family:var(--mono); font-size:10.5px; color:var(--dim) }
+.colophon{ margin:16px 0 0; font-family:var(--mono); font-size:12px; color:var(--dim) }
 
 /* ---------------- PROJECT CARDS ---------------- */
 .featured{
@@ -266,11 +266,11 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 }
 .card--big h3{ font-size:26px }
 .live{
-  font-family:var(--mono); font-size:10px; letter-spacing:.18em;
+  font-family:var(--mono); font-size:11px; letter-spacing:.18em;
   text-transform:uppercase; color:#7CE38B;
 }
 .card .meta{
-  margin:0; font-family:var(--mono); font-size:10.5px;
+  margin:0; font-family:var(--mono); font-size:12px;
   letter-spacing:.08em; color:var(--dim); text-transform:uppercase;
 }
 .card .cdesc{ margin:2px 0 0; font-size:14px; color:var(--text) }
@@ -278,22 +278,22 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 .why{ margin-top:auto; padding-top:10px }
 .why{ border-top:1px dashed var(--edge) }
 .wlab{
-  display:block; font-family:var(--mono); font-size:9.5px;
+  display:block; font-family:var(--mono); font-size:11px;
   letter-spacing:.24em; text-transform:uppercase; color:var(--magenta);
   margin-bottom:3px;
 }
-.why p{ margin:0; font-size:13px; line-height:1.55; color:var(--dim); font-style:italic }
+.why p{ margin:0; font-size:13.5px; line-height:1.55; color:var(--dim); font-style:italic }
 
 /* mobile: tighter lab so Music stays reachable */
 @media (max-width:760px){
   .grid{ grid-template-columns:1fr 1fr; gap:8px }
   .card .cbody{ padding:10px 10px 12px }
-  .card h3{ font-size:15px }
+  .card h3{ font-size:16px }
   .card--big h3{ font-size:21px }
-  .card .cdesc{ font-size:12.5px }
-  .card .meta{ font-size:9px }
-  .why p{ font-size:11.5px }
-  .wlab{ font-size:8.5px }
+  .card .cdesc{ font-size:13px }
+  .card .meta{ font-size:11px }
+  .why p{ font-size:12.5px }
+  .wlab{ font-size:10.5px }
   main section{ padding:40px var(--gutter) }
 }
 
@@ -321,10 +321,10 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 .track.is-playing .t-btn{ background:var(--magenta); color:var(--ink) }
 .track:hover .t-btn{ box-shadow:0 0 14px -2px rgba(217,107,168,.7) }
 .t-title{ flex:1 }
-.t-genre{ font-family:var(--mono); font-size:11px; color:var(--dim) }
-.t-dur{ font-family:var(--mono); font-size:11px; color:var(--dim); font-variant-numeric:tabular-nums }
+.t-genre{ font-family:var(--mono); font-size:12px; color:var(--dim) }
+.t-dur{ font-family:var(--mono); font-size:12px; color:var(--dim); font-variant-numeric:tabular-nums }
 .t-for{
-  font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em;
   color:var(--beam); border:1px solid var(--edge); padding:3px 8px;
   text-transform:uppercase; white-space:nowrap;
 }
@@ -361,13 +361,13 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
   .spine, .spine:hover, .spine[aria-expanded="true"]{ transform:none; transition:none }
 }
 .spine-t{ font-weight:700; font-size:13.5px; letter-spacing:.02em }
-.spine-a{ font-size:11px; opacity:.75 }
+.spine-a{ font-size:12px; opacity:.75 }
 .notepanel h3{
   margin:0 0 2px; font-family:var(--display); font-weight:800;
   font-size:22px; text-transform:uppercase; letter-spacing:.02em;
   color:var(--sodium-hi);
 }
-.note-a{ margin:0 0 10px; font-family:var(--mono); font-size:11px; color:var(--dim) }
+.note-a{ margin:0 0 10px; font-family:var(--mono); font-size:12px; color:var(--dim) }
 .notepanel p{ margin:0; font-size:15px; line-height:1.65 }
 .note-pending{ color:var(--dim); font-style:italic }
 
@@ -376,4 +376,11 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
   .reveal{ opacity:0; transform:translateY(12px);
     transition:opacity 500ms ease, transform 500ms ease }
   .reveal.is-in{ opacity:1; transform:none }
+}
+
+/* mobile collapse is CSS-first so it can never race first paint */
+.showall{ display:none }
+@media (max-width:760px){
+  #grid:not(.expanded) > li:nth-child(n+5){ display:none }
+  .showall:not([hidden]){ display:block }
 }
