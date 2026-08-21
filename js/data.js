@@ -282,6 +282,69 @@ const TRACKS = [
     sunoUrl: null, youtubeUrl: null, projectId: null }
 ];
 
+/* Writing. Bodies are Lorem Ipsum placeholders — real posts replace `body`,
+   one string per paragraph. `tools/bake.mjs` renders the preview row here and
+   writes a full page per post into writing/<slug>.html. */
+const POSTS = [
+  {
+    slug: "what-ai-actually-changed",
+    title: "What AI actually changed for me",
+    date: "2026-08-18", readMins: 6, tag: "Craft",
+    excerpt: "Not the ideas. The distance between having one and holding it.",
+    body: [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam quis risus eget urna mollis ornare vel eu leo. Vestibulum id ligula porta felis euismod semper.",
+      "Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper nulla non metus auctor fringilla. Maecenas sed diam eget risus varius blandit sit amet non magna. Aenean lacinia bibendum nulla sed consectetur.",
+      "Curabitur blandit tempus porttitor. Nulla vitae elit libero, a pharetra augue. Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod. Duis mollis, est non commodo luctus.",
+      "Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh."
+    ]
+  },
+  {
+    slug: "a-game-in-a-weekend",
+    title: "A game in a weekend, and what it costs",
+    date: "2026-08-04", readMins: 8, tag: "Games",
+    excerpt: "Shipping fast is a skill. Knowing what you traded away is a different one.",
+    body: [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",
+      "Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      "Nulla vitae elit libero, a pharetra augue. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam."
+    ]
+  },
+  {
+    slug: "music-i-did-not-write",
+    title: "The music I did not write",
+    date: "2026-07-22", readMins: 5, tag: "Music",
+    excerpt: "Twenty-nine tracks with my name on none of them. On credit, and what it is for.",
+    body: [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum id ligula porta felis euismod semper. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Sed posuere consectetur est at lobortis.",
+      "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit.",
+      "Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Duis mollis, est non commodo luctus, nisi erat porttitor ligula."
+    ]
+  },
+  {
+    slug: "teaching-a-six-year-old-to-read",
+    title: "Teaching a six-year-old to read, with a build step",
+    date: "2026-07-09", readMins: 7, tag: "Family",
+    excerpt: "The best user research I have ever done happened at a kitchen table.",
+    body: [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas faucibus mollis interdum. Donec sed odio dui. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum nulla sed consectetur.",
+      "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.",
+      "Curabitur blandit tempus porttitor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Morbi leo risus, porta ac consectetur ac."
+    ]
+  },
+  {
+    slug: "the-front-line-is-an-output",
+    title: "The front line is an output",
+    date: "2026-06-27", readMins: 9, tag: "Systems",
+    excerpt: "On simulations that draw their own maps, and why that is harder than it sounds.",
+    body: [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper.",
+      "Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam quis risus eget urna mollis ornare vel eu leo. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+      "Sed posuere consectetur est at lobortis. Maecenas sed diam eget risus varius blandit sit amet non magna. Etiam porta sem malesuada magna mollis euismod. Donec id elit non mi porta gravida at eget metus.",
+      "Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem."
+    ]
+  }
+];
+
 /* Sample entries (Miha will replace/extend — the shelf is built to grow).
    spine: null cycles the four neon hues (amber, cyan, magenta, violet);
    set a CSS colour to override. img: optional cover art behind the frame. */

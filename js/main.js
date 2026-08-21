@@ -189,6 +189,78 @@
         spines[btn.dataset.book] = btn;
         btn.addEventListener("click", function () { openBook(btn.dataset.book); });
       });
+      /* ---- the rail: arrows, a count, and looping once there are enough
+         books that a seam would never be seen ---- */
+      var rail = shelf;
+      var prev = document.getElementById("shelf-prev");
+      var next = document.getElementById("shelf-next");
+      var countEl = document.getElementById("shelf-count");
+      var LOOP_FROM = 8;                     /* below this, looping shows the seam */
+      var looping = BOOKS.length >= LOOP_FROM;
+
+      if (countEl) {
+        countEl.textContent = BOOKS.length + (BOOKS.length === 1 ? " book" : " books") +
+          (looping ? " · scroll either way, it comes round" : " · scroll the shelf");
+      }
+
+      function step(dir) {
+        var one = rail.querySelector(".spine");
+        var by = one ? one.getBoundingClientRect().width + 18 : 140;
+        rail.scrollBy({ left: dir * by * 2, behavior: "smooth" });
+      }
+      if (prev && next) {
+        prev.addEventListener("click", function () { step(-1); });
+        next.addEventListener("click", function () { step(1); });
+        var syncArrows = function () {
+          var over = rail.scrollWidth - rail.clientWidth > 8;
+          next.hidden = !over;
+          prev.hidden = !over || (!looping && rail.scrollLeft < 8);
+          if (!looping && over) {
+            next.hidden = rail.scrollLeft > rail.scrollWidth - rail.clientWidth - 8;
+          }
+        };
+        rail.addEventListener("scroll", syncArrows, { passive: true });
+        addEventListener("resize", syncArrows);
+        syncArrows();
+      }
+
+      /* Endless: three copies of the run, parked in the middle. When the
+         reader drifts into the first or last copy we jump them back a whole
+         run — same pixels under the cursor, so the seam is invisible. The
+         clones are aria-hidden and untabbable; only the real row is in the
+         accessibility tree. */
+      if (looping) {
+        var run = [].slice.call(rail.children);
+        var makeGhosts = function () {
+          var frag = document.createDocumentFragment();
+          run.forEach(function (el) {
+            var c = el.cloneNode(true);
+            c.setAttribute("aria-hidden", "true");
+            c.setAttribute("tabindex", "-1");
+            c.classList.add("is-ghost");
+            c.removeAttribute("id");
+            frag.appendChild(c);
+          });
+          return frag;
+        };
+        rail.insertBefore(makeGhosts(), run[0]);
+        rail.appendChild(makeGhosts());
+        var runWidth = 0;
+        requestAnimationFrame(function () {
+          runWidth = rail.scrollWidth / 3;
+          rail.scrollLeft = runWidth;
+        });
+        var wrapping = false;
+        rail.addEventListener("scroll", function () {
+          if (wrapping || !runWidth) return;
+          if (rail.scrollLeft < runWidth * 0.5) {
+            wrapping = true; rail.scrollLeft += runWidth; wrapping = false;
+          } else if (rail.scrollLeft > runWidth * 1.5) {
+            wrapping = true; rail.scrollLeft -= runWidth; wrapping = false;
+          }
+        }, { passive: true });
+      }
+
       var openId = null;
       function openBook(id) {
         if (openId === id) {  /* toggle closed */

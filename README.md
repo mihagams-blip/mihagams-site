@@ -11,7 +11,7 @@ files. Node is not required to run or deploy.
 
 | Piece | Notes |
 | --- | --- |
-| `js/data.js` | All content: projects (each with a personal "why"), Suno tracks, the bookshelf. HUD counts are computed from these arrays. |
+| `js/data.js` | All content: posts, projects (each with a personal "why"), Suno tracks, the bookshelf. HUD counts are computed from these arrays. |
 | `js/main.js` | Hero video deferral, sticky nav + scrollspy, project cards, shelf, reveal-on-scroll. |
 | `js/audio.js` | Web Audio player + skyline equaliser. Renders the list once; play state mutates in place so keyboard focus survives. |
 | `assets/neon-city.mp4` | The hero loop — 1.76 MB H.264 (96 frames @ 12 fps), transcoded from a 10.6 MB animated WebP. |
@@ -27,6 +27,15 @@ files. Node is not required to run or deploy.
 - Spines and play controls are real buttons with `aria-expanded` /
   `aria-pressed`; the note panel is `aria-live`.
 - Reduced motion = zero animation, zero video bytes, zero idle timers.
+
+## Tools
+
+| Script | What it does |
+| --- | --- |
+| `node tools/bake.mjs` | Splices `data.js` into `index.html` and writes `writing/*.html`. Run after any content edit. |
+| `node tools/shot.mjs <url> <out.png> [js] [waitMs]` | Screenshots a page in a throwaway Chrome profile, optionally after running a snippet — this is how the in-game project cards were captured. |
+| `node tools/probe.mjs <url> <js> [waitMs]` | Evaluates an expression in a fresh profile and prints the result. Use it instead of the browser console: a stale cached `main.js` has more than once made working code look broken. |
+| `python3 tools/make-dust.py` | Regenerates `assets/dust.webp`, the shelf's dust-puff mask. |
 
 ## Running locally
 
@@ -49,7 +58,19 @@ keeps CLS at a deterministic 0 and the content visible to crawlers. Adding a boo
 progress"). Adding a track = one object in `TRACKS` plus an mp3 in
 `assets/audio/`. Project cards follow the same pattern.
 
-**The shelf.** Each book is a neon HUD panel drawn in CSS — an accent
+**Writing.** `POSTS` in `js/data.js` drives both the preview row on the home
+page and a generated page per post at `writing/<slug>.html` — `tools/bake.mjs`
+writes them. Bodies are one string per paragraph; replace the Lorem Ipsum and
+re-bake. Each post carries an accent from the same five-hue cycle as the shelf.
+
+**The shelf.** It is one horizontal rail however many books there are: scroll
+snapping, edge fades, arrow buttons, and a coverflow tilt driven by CSS
+`animation-timeline: view(inline)` (absent browsers simply get a plain
+scroller). At eight books or more it also loops — three copies of the run,
+parked in the middle, jumping back a whole run when the reader drifts into a
+clone, so the seam is never visible. Clones are `aria-hidden` and untabbable.
+
+Each book is a neon HUD panel drawn in CSS — an accent
 octagon with a second copy punched out in ink, plus a ticks layer. The
 accent cycles amber → cyan → magenta → violet by position, so a shelf of
 any length keeps its rhythm; set `spine` to a CSS colour to override one,

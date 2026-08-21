@@ -44,6 +44,7 @@
     <p class="tagline">A game, a site, a song —
       <span class="tag-em">I just like seeing how they end up.</span></p>
     <nav class="hero-nav" aria-label="Sections">
+      <a href="#writing">Writing</a>
       <a href="#projects">Projects</a>
       <a href="#music">Music</a>
       <a href="#books">Books</a>
@@ -59,14 +60,27 @@
   <a class="mark" href="#top" aria-label="Back to top">
     <i style="background:var(--sodium)"></i><i style="background:var(--magenta)"></i><i style="background:var(--beam)"></i>
   </a>
+  <a href="#writing" data-spy="writing">Writing</a>
   <a href="#projects" data-spy="projects">Projects</a>
   <a href="#music" data-spy="music">Music</a>
   <a href="#books" data-spy="books">Books</a>
 </nav>
 
 <main>
+  <section id="writing" aria-labelledby="h-writing" class="s-writing">
+    <p class="eyebrow accent-beam">01 / The Notebook</p>
+    <h2 id="h-writing">Writing</h2>
+    <ul class="posts"><!--BAKE:writing-->
+<li class="post" style="--c:var(--beam)"><a class="post-link" href="writing/what-ai-actually-changed.html"><span class="post-meta"><span class="post-tag">Craft</span><time datetime="2026-08-18">August 18, 2026</time></span><h3 class="post-title">What AI actually changed for me</h3><p class="post-ex">Not the ideas. The distance between having one and holding it.</p><span class="post-more">6 min read <i aria-hidden="true">&#8594;</i></span></a></li>
+<li class="post" style="--c:var(--magenta)"><a class="post-link" href="writing/a-game-in-a-weekend.html"><span class="post-meta"><span class="post-tag">Games</span><time datetime="2026-08-04">August 4, 2026</time></span><h3 class="post-title">A game in a weekend, and what it costs</h3><p class="post-ex">Shipping fast is a skill. Knowing what you traded away is a different one.</p><span class="post-more">8 min read <i aria-hidden="true">&#8594;</i></span></a></li>
+<li class="post" style="--c:var(--sodium-hi)"><a class="post-link" href="writing/music-i-did-not-write.html"><span class="post-meta"><span class="post-tag">Music</span><time datetime="2026-07-22">July 22, 2026</time></span><h3 class="post-title">The music I did not write</h3><p class="post-ex">Twenty-nine tracks with my name on none of them. On credit, and what it is for.</p><span class="post-more">5 min read <i aria-hidden="true">&#8594;</i></span></a></li>
+<li class="post" style="--c:var(--cyan)"><a class="post-link" href="writing/teaching-a-six-year-old-to-read.html"><span class="post-meta"><span class="post-tag">Family</span><time datetime="2026-07-09">July 9, 2026</time></span><h3 class="post-title">Teaching a six-year-old to read, with a build step</h3><p class="post-ex">The best user research I have ever done happened at a kitchen table.</p><span class="post-more">7 min read <i aria-hidden="true">&#8594;</i></span></a></li>
+<li class="post" style="--c:var(--violet)"><a class="post-link" href="writing/the-front-line-is-an-output.html"><span class="post-meta"><span class="post-tag">Systems</span><time datetime="2026-06-27">June 27, 2026</time></span><h3 class="post-title">The front line is an output</h3><p class="post-ex">On simulations that draw their own maps, and why that is harder than it sounds.</p><span class="post-more">9 min read <i aria-hidden="true">&#8594;</i></span></a></li>
+<!--/BAKE:writing--></ul>
+  </section>
+
   <section id="projects" aria-labelledby="h-projects" class="s-projects">
-    <p class="eyebrow accent-beam">01 / The Lab</p>
+    <p class="eyebrow accent-beam">02 / The Lab</p>
     <h2 id="h-projects">Projects</h2>
     <div id="featured" class="featured"><!--BAKE:featured-->
 <article class="card card--big"><a class="cardlink" href="https://steel-signal-n43n.vercel.app/" aria-label="Steel Signal — open live"><div class="shot"><img src="assets/projects/steel-signal.webp" width="1200" height="750" alt="Steel Signal in play: hex map of the Vovcha river with the order of battle, sector minimap and comms log." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Steel Signal</h3><p class="meta">Game · 2026 · Three.js · strategy · drones + EW</p><p class="cdesc">A turn-based hex wargame for the drone age — electronic warfare, strike drones and fragile supply lines.</p><div class="why"><span class="wlab">Why I made it</span><p>Panzer Corps taught me to love hexes; the drone war rewrote the rules. Nobody had built the sequel that understands both, so I did.</p></div></div></a></article>
@@ -93,7 +107,7 @@
   </section>
 
   <section id="music" aria-labelledby="h-music" class="s-music">
-    <p class="eyebrow accent-mag">02 / The Soundtrack</p>
+    <p class="eyebrow accent-mag">03 / The Soundtrack</p>
     <h2 id="h-music">Music</h2>
     <ul class="fcards"><!--BAKE:featuredTracks-->
 <li class="fcard"><button class="fcard-btn track" data-track="blade-smile" aria-pressed="false" aria-label="Play Blade Smile — dark pop"><span class="fc-art"><img src="assets/covers/blade-smile.webp" width="600" height="600" alt="Neon-lit cover art: two figures embrace in rain-soaked cyberpunk streets under hand-painted lettering." loading="lazy" decoding="async"><span class="fc-play t-btn" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2l16 10L5 22z" fill="currentColor"/></svg></span></span><span class="fc-meta"><span class="fc-title">Blade Smile</span><span class="fc-sub">dark pop · 3:29</span></span></button></li>
@@ -138,13 +152,18 @@
   </section>
 
   <section id="books" aria-labelledby="h-books" class="s-books">
-    <p class="eyebrow accent-sodium">03 / The Shelf</p>
+    <p class="eyebrow accent-sodium">04 / The Shelf</p>
     <h2 id="h-books">Books</h2>
-    <div id="shelf" class="shelf"><!--BAKE:shelf-->
+    <p class="shelf-count" id="shelf-count"></p>
+    <div class="shelf-rail">
+      <button class="shelf-nav prev" id="shelf-prev" type="button" aria-label="Previous books" hidden>&#8592;</button>
+      <div id="shelf" class="shelf"><!--BAKE:shelf-->
 <button class="spine" style="--c:var(--sodium-hi)" data-book="meditations" aria-expanded="false" aria-controls="note"><span class="sp-mist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sp-frame" aria-hidden="true"></span><span class="sp-ticks" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">01</span><span class="sp-body"><span class="sp-t">Meditations</span><span class="sp-a">Marcus Aurelius</span></span></button>
 <button class="spine" style="--c:var(--cyan)" data-book="sapiens" aria-expanded="false" aria-controls="note"><span class="sp-mist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sp-frame" aria-hidden="true"></span><span class="sp-ticks" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">02</span><span class="sp-body"><span class="sp-t">Sapiens</span><span class="sp-a">Yuval Noah Harari</span></span></button>
 <button class="spine" style="--c:var(--magenta)" data-book="thinking-fast-slow" aria-expanded="false" aria-controls="note"><span class="sp-mist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sp-frame" aria-hidden="true"></span><span class="sp-ticks" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">03</span><span class="sp-body"><span class="sp-t">Thinking, Fast and Slow</span><span class="sp-a">Daniel Kahneman</span></span></button>
 <!--/BAKE:shelf--></div>
+      <button class="shelf-nav next" id="shelf-next" type="button" aria-label="More books" hidden>&#8594;</button>
+    </div>
     <div id="note" class="notepanel" aria-live="polite" hidden></div>
   </section>
 </main>

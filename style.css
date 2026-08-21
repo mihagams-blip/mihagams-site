@@ -387,10 +387,64 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
    copy punched out in ink, and a ticks layer for the small marks. Pure
    CSS, so the shelf takes any number of books at any accent colour. */
 
-.shelf{
-  display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end;
+/* One shelf, however many books. It scrolls horizontally with snap points,
+   and each spine tilts by how far it sits from the middle of the scrollport
+   — a coverflow, driven by CSS scroll timelines where they exist and simply
+   absent (a plain, perfectly usable scroller) where they don't. */
+.shelf-rail{
+  position:relative;
   margin-bottom:26px;
-  perspective:900px; perspective-origin:50% 45%;
+}
+.shelf{
+  display:flex; flex-wrap:nowrap; gap:18px; align-items:center;
+  padding:34px 0 26px;
+  overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+  perspective:1100px; perspective-origin:50% 50%;
+  /* the row fades out at both ends instead of stopping at a hard edge */
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 72px,
+    #000 calc(100% - 72px), transparent 100%);
+  mask-image:linear-gradient(90deg, transparent 0, #000 72px,
+    #000 calc(100% - 72px), transparent 100%);
+}
+.shelf::-webkit-scrollbar{ display:none }
+.shelf > .spine{ scroll-snap-align:center; flex:0 0 auto }
+
+@supports (animation-timeline: view(inline)) {
+  @media (prefers-reduced-motion: no-preference){
+    .shelf > .spine{
+      animation:sp-flow linear both;
+      animation-timeline:view(inline);
+      animation-range:entry 0% exit 100%;
+    }
+    /* the open book opts out — its pull-out transform owns it */
+    .shelf > .spine[aria-expanded="true"]{ animation:none }
+  }
+}
+@keyframes sp-flow{
+  0%   { rotate:y 34deg; scale:.84; opacity:.5 }
+  50%  { rotate:y 0deg;  scale:1;   opacity:1 }
+  100% { rotate:y -34deg; scale:.84; opacity:.5 }
+}
+
+/* rail controls */
+.shelf-nav{
+  position:absolute; top:50%; translate:0 -50%; z-index:3;
+  width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+  background:rgba(10,7,16,.78); border:1px solid var(--edge); color:var(--text);
+  font-family:var(--mono); cursor:pointer;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  transition:border-color 180ms ease, color 180ms ease;
+}
+.shelf-nav:hover{ border-color:var(--beam); color:#fff }
+.shelf-nav[hidden]{ display:none }
+.shelf-nav.prev{ left:-6px }
+.shelf-nav.next{ right:-6px }
+.shelf-count{
+  font-family:var(--mono); font-size:12px; color:var(--dim);
+  letter-spacing:.14em; text-transform:uppercase; margin:0 0 4px;
 }
 
 .spine{
@@ -603,7 +657,7 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 
 /* pre-render space reservations — belt and braces against CLS */
 .hud{ min-height:52px }
-.shelf{ min-height:300px }
+.shelf-rail{ min-height:360px }
 
 /* ---------------- FEATURED TRACKS ---------------- */
 .fcards{
@@ -672,3 +726,111 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
   padding:3px 8px; pointer-events:none;
   -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
 }
+
+/* looped copies never take focus or a second reading */
+.spine.is-ghost{ pointer-events:auto }
+
+/* ---------------- WRITING ----------------
+   Kin to the shelf — a neon edge, a cut corner, an accent per item — but
+   laid down flat and kept short. The section is a doorway, not the room:
+   the reading happens on writing/<slug>.html. */
+.s-writing h2{ color:var(--beam) }
+.posts{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:1fr; gap:12px;
+}
+@media (min-width:640px){ .posts{ grid-template-columns:repeat(2,1fr) } }
+@media (min-width:1100px){ .posts{ grid-template-columns:repeat(5,1fr) } }
+
+.post{ --c:var(--beam); position:relative }
+.post-link{
+  position:relative; display:flex; flex-direction:column; gap:7px; height:100%;
+  padding:16px 16px 15px;
+  color:var(--text); text-decoration:none;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--c) 7%, transparent), transparent 60%),
+    var(--ink-2);
+  border:1px solid var(--edge);
+  border-top:2px solid var(--c);
+  clip-path:polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  transition:transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+}
+.post-link:hover, .post-link:focus-visible{
+  transform:translateY(-4px);
+  border-color:color-mix(in srgb, var(--c) 60%, var(--edge));
+  box-shadow:0 14px 34px -18px color-mix(in srgb, var(--c) 75%, transparent);
+}
+@media (prefers-reduced-motion: reduce){
+  .post-link, .post-link:hover, .post-link:focus-visible{ transform:none; transition:none }
+}
+.post-meta{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:11px; color:var(--dim);
+}
+.post-tag{
+  color:var(--c); border:1px solid var(--edge); padding:2px 7px;
+  letter-spacing:.16em; text-transform:uppercase; font-size:10px;
+}
+.post-title{
+  margin:0; font-family:var(--display); font-weight:800;
+  font-size:19px; line-height:1.06; letter-spacing:.015em; text-transform:uppercase;
+}
+.post-ex{ margin:0; font-size:13.5px; line-height:1.5; color:var(--dim) }
+.post-more{
+  margin-top:auto; padding-top:8px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--c);
+}
+.post-more i{ font-style:normal; transition:translate 200ms ease; display:inline-block }
+.post-link:hover .post-more i{ translate:4px 0 }
+
+/* ---------------- ARTICLE PAGE ---------------- */
+body.reading{
+  background:
+    radial-gradient(120% 60% at 50% 0%,
+      color-mix(in srgb, var(--c) 10%, transparent), transparent 60%),
+    var(--ink);
+}
+.article-wrap{
+  max-width:74ch; margin:0 auto;
+  padding:calc(48px + 68px) var(--gutter) 0;
+}
+.article .eyebrow{ color:var(--dim); flex-wrap:wrap }
+.article h1{
+  margin:0 0 14px; font-family:var(--display); font-weight:800;
+  font-size:clamp(34px,6vw,64px); line-height:.98;
+  letter-spacing:.01em; text-transform:uppercase; text-wrap:balance;
+  color:#fff;
+  text-shadow:0 0 26px color-mix(in srgb, var(--c) 45%, transparent);
+}
+.article .lede{
+  margin:0 0 30px; font-size:clamp(17px,2.1vw,21px); line-height:1.5;
+  color:color-mix(in srgb, var(--c) 55%, var(--text));
+  padding-bottom:26px; border-bottom:1px solid var(--edge);
+}
+.article-body p{
+  margin:0 0 22px; font-size:17px; line-height:1.75; color:var(--text);
+}
+.article-body p:first-of-type::first-letter{
+  float:left; font-family:var(--display); font-weight:800;
+  font-size:62px; line-height:.8; padding:6px 12px 0 0; color:var(--c);
+}
+.postnav{
+  display:grid; grid-template-columns:1fr; gap:12px;
+  margin:44px 0 60px; padding-top:26px; border-top:1px solid var(--edge);
+}
+@media (min-width:640px){ .postnav{ grid-template-columns:1fr 1fr } }
+.pn{
+  display:flex; flex-direction:column; gap:5px;
+  padding:14px 16px; text-decoration:none; color:var(--text);
+  border:1px solid var(--edge); background:var(--ink-2);
+  font-family:var(--display); font-weight:800; font-size:16px;
+  text-transform:uppercase; letter-spacing:.015em; line-height:1.1;
+  transition:border-color 200ms ease;
+}
+.pn:hover{ border-color:var(--c) }
+.pn span{
+  font-family:var(--mono); font-weight:400; font-size:10px;
+  letter-spacing:.2em; color:var(--dim); text-transform:uppercase;
+}
+.pn.next{ text-align:right }
