@@ -86,6 +86,7 @@ const shelf = BOOKS.map((b, i) => {
   const hue = b.spine || SHELF_HUES[i % SHELF_HUES.length];
   const art = b.img ? ` sp-has-art" style="--c:${hue};--art:url(${b.img})` : `" style="--c:${hue}`;
   return `<button class="spine${art}" data-book="${b.id}" aria-expanded="false" aria-controls="note">` +
+    `<span class="sp-mist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>` +
     `<span class="sp-frame" aria-hidden="true"></span>` +
     `<span class="sp-ticks" aria-hidden="true"></span>` +
     `<span class="sp-no" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>` +

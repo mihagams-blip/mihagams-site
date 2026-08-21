@@ -54,7 +54,16 @@ octagon with a second copy punched out in ink, plus a ticks layer. The
 accent cycles amber → cyan → magenta → violet by position, so a shelf of
 any length keeps its rhythm; set `spine` to a CSS colour to override one,
 or `img` to put cover art behind the frame. Spines are a fixed height and
-long titles wrap into a second column rather than towering.
+long titles wrap into a second column rather than towering. Opening a book
+pulls it toward the reader in 3D (the shelf carries a `perspective`) and
+blooms five soft puffs of dust around it; both are skipped entirely under
+`prefers-reduced-motion`.
+
+**One CSS trap worth remembering:** the reveal-on-scroll utility must animate
+the independent `translate` property, never `transform`. It sits late in the
+stylesheet at the same specificity as component states like `.card:hover` and
+`.spine[aria-expanded="true"]`, so writing `transform` there silently cancels
+every one of them.
 
 **Featured tracks.** Four tracks carry `featured: true` and get a cover card
 above the list. Move the flag to change which four. Drop the artwork in as
