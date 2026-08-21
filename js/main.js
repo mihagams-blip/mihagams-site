@@ -46,6 +46,51 @@
     else addEventListener("load", arm, { once: true });
   }
 
+  /* ---- Projects: featured row + grid (mobile: 4 + Show all) ---- */
+  function projectCard(p, big) {
+    var tagEl = big ? "article" : "li";
+    var media = '<img src="' + p.img + '" width="1200" height="750" alt="' + p.imgAlt + '" loading="lazy" decoding="async">';
+    var live = p.url ? '<span class="live">● Live</span>' : "";
+    var meta = '<p class="meta">' + p.kind + " · " + p.year + (p.tags.length ? " · " + p.tags.join(" · ") : "") + "</p>";
+    var why = '<div class="why"><span class="wlab">Why I made it</span><p>' + p.why + "</p></div>";
+    var inner =
+      '<div class="shot">' + media + "</div>" +
+      '<div class="cbody">' + live + "<h3>" + p.title + "</h3>" + meta +
+      '<p class="cdesc">' + p.desc + "</p>" + why + "</div>";
+    if (p.url) {
+      return "<" + tagEl + ' class="card' + (big ? " card--big" : "") + '">' +
+        '<a class="cardlink" href="' + p.url + '" aria-label="' + p.title + ' — open live">' + inner + "</a></" + tagEl + ">";
+    }
+    return "<" + tagEl + ' class="card' + (big ? " card--big" : "") + '">' + inner + "</" + tagEl + ">";
+  }
+  var featEl = document.getElementById("featured");
+  var gridEl = document.getElementById("grid");
+  if (featEl && gridEl && typeof PROJECTS !== "undefined") {
+    var feat = PROJECTS.filter(function (p) { return p.featured; });
+    var rest = PROJECTS.filter(function (p) { return !p.featured; });
+    featEl.innerHTML = feat.map(function (p) { return projectCard(p, true); }).join("");
+    gridEl.innerHTML = rest.map(function (p) { return projectCard(p, false); }).join("");
+    /* mobile: collapse grid past 4 behind an expander */
+    var btn = document.getElementById("showall");
+    var extra = [].slice.call(gridEl.children, 4);
+    if (btn && extra.length) {
+      document.getElementById("showall-n").textContent = rest.length;
+      var mq = matchMedia("(max-width: 760px)");
+      var apply = function () {
+        var collapse = mq.matches && btn.getAttribute("aria-expanded") !== "true";
+        extra.forEach(function (li) { li.hidden = collapse; });
+        btn.hidden = !mq.matches || btn.getAttribute("aria-expanded") === "true";
+      };
+      btn.addEventListener("click", function () {
+        btn.setAttribute("aria-expanded", "true");
+        apply();
+        extra[0].querySelector("img, h3").closest(".card").scrollIntoView({ block: "nearest" });
+      });
+      mq.addEventListener ? mq.addEventListener("change", apply) : mq.addListener(apply);
+      apply();
+    }
+  }
+
   /* ---- Sticky nav: appears after the hero ---- */
   var nav = document.getElementById("stickynav");
   var hero = document.querySelector(".hero");
