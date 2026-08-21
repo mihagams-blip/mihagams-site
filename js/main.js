@@ -158,4 +158,19 @@
       });
     }, { rootMargin: "-40% 0px -55% 0px" }).observe(sec);
   });
+
+  /* ---- Reveal-on-scroll (skipped entirely under reduced motion) ---- */
+  if (!REDUCED && "IntersectionObserver" in window) {
+    var toReveal = document.querySelectorAll("main h2, .card, .trackrow, .spine, .outro-body");
+    var rio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("is-in"); rio.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    toReveal.forEach(function (el, i) {
+      el.classList.add("reveal");
+      el.style.transitionDelay = (i % 4) * 60 + "ms";
+      rio.observe(el);
+    });
+  }
 })();

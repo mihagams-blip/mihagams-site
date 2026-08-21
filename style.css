@@ -370,3 +370,10 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 .note-a{ margin:0 0 10px; font-family:var(--mono); font-size:11px; color:var(--dim) }
 .notepanel p{ margin:0; font-size:15px; line-height:1.65 }
 .note-pending{ color:var(--dim); font-style:italic }
+
+/* reveal-on-scroll — the block only exists when motion is allowed */
+@media (prefers-reduced-motion: no-preference){
+  .reveal{ opacity:0; transform:translateY(12px);
+    transition:opacity 500ms ease, transform 500ms ease }
+  .reveal.is-in{ opacity:1; transform:none }
+}
