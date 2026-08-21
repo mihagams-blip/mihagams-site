@@ -56,8 +56,15 @@ any length keeps its rhythm; set `spine` to a CSS colour to override one,
 or `img` to put cover art behind the frame. Spines are a fixed height and
 long titles wrap into a second column rather than towering. Opening a book
 pulls it toward the reader in 3D (the shelf carries a `perspective`) and
-blooms five soft puffs of dust around it, and a short sound plays. All three
-are skipped entirely under `prefers-reduced-motion`.
+blooms five puffs of dust around it, runs a light down the frame, tips the
+books either side into the gap it left, and plays a short sound. All of it is
+skipped under `prefers-reduced-motion`.
+
+The dust is a generated texture, not blurred circles: `tools/make-dust.py`
+writes `assets/dust.webp`, a 21 KB 2×2 atlas of four fractal-noise wisps. The
+CSS uses it as a *mask*, so each puff keeps real internal structure while
+still taking its book's accent colour — one file serves every hue. Re-run the
+script to reshape them.
 
 The sound is synthesised in `js/main.js`, not shipped as a file: a noise burst
 through a bandpass sweeping 2.6 kHz → 700 Hz is the card sliding against its

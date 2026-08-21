@@ -486,39 +486,77 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
 .spine:focus-visible{ outline:none }
 .spine:focus-visible .sp-frame{ box-shadow:0 0 0 2px var(--beam) }
 
-/* Dust off the shelf: five soft puffs that bloom and drift as the book
-   comes out. They live outside the frame's box, behind it, and only run
-   while the book is open — closing simply stops them. */
+/* Dust off the shelf. The puffs are a generated noise texture (assets/dust.webp,
+   a 2x2 atlas of four wisps — tools/make-dust.py) used as a MASK, so each one
+   has real internal structure and still takes the book's accent colour. They
+   tumble as they drift; blurred circles read as CSS, smoke reads as smoke. */
 .sp-mist{
-  position:absolute; inset:-40px; z-index:0; pointer-events:none;
+  position:absolute; inset:-56px; z-index:0; pointer-events:none;
 }
 .sp-mist i{
   position:absolute; display:block;
-  width:64px; height:64px; border-radius:50%;
-  background:radial-gradient(circle,
-    color-mix(in srgb, var(--c) 60%, white) 0%,
-    color-mix(in srgb, var(--c) 30%, transparent) 42%,
-    transparent 70%);
-  filter:blur(9px);
+  width:150px; height:150px;
+  background:radial-gradient(circle at 44% 42%,
+    color-mix(in srgb, var(--c) 45%, white) 0%,
+    color-mix(in srgb, var(--c) 90%, white) 38%,
+    color-mix(in srgb, var(--c) 60%, transparent) 72%,
+    transparent 90%);
+  -webkit-mask-image:url("assets/dust.webp"); mask-image:url("assets/dust.webp");
+  -webkit-mask-size:200% 200%; mask-size:200% 200%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  filter:blur(1px);
   opacity:0;
 }
-.sp-mist i:nth-child(1){ left:2px;  bottom:52px; --dx:-42px; --dy:-16px; animation-delay:0ms }
-.sp-mist i:nth-child(2){ right:0;   bottom:70px; --dx: 40px; --dy:-24px; animation-delay:70ms }
-.sp-mist i:nth-child(3){ left:18px; bottom:18px; --dx:-26px; --dy: 22px; animation-delay:130ms }
-.sp-mist i:nth-child(4){ right:14px;bottom:8px;  --dx: 30px; --dy: 26px; animation-delay:190ms }
-.sp-mist i:nth-child(5){ left:50%;  top:14px;    --dx: -6px; --dy:-34px; animation-delay:110ms }
+/* each puff samples a different cell of the atlas */
+.sp-mist i:nth-child(1){ -webkit-mask-position:0 0;       mask-position:0 0;
+  left:-6px;  bottom:64px; --dx:-64px; --dy:-26px; --rot:-38deg; animation-delay:0ms }
+.sp-mist i:nth-child(2){ -webkit-mask-position:100% 0;    mask-position:100% 0;
+  right:-14px;bottom:92px; --dx: 62px; --dy:-38px; --rot: 44deg; animation-delay:60ms }
+.sp-mist i:nth-child(3){ -webkit-mask-position:0 100%;    mask-position:0 100%;
+  left:6px;   bottom:6px;  --dx:-44px; --dy: 34px; --rot: 28deg; animation-delay:120ms }
+.sp-mist i:nth-child(4){ -webkit-mask-position:100% 100%; mask-position:100% 100%;
+  right:0;    bottom:-8px; --dx: 48px; --dy: 40px; --rot:-32deg; animation-delay:180ms }
+.sp-mist i:nth-child(5){ -webkit-mask-position:50% 50%;   mask-position:50% 50%;
+  left:26%;   top:-6px;    --dx: -8px; --dy:-56px; --rot: 18deg; animation-delay:95ms }
 
 .spine[aria-expanded="true"] .sp-mist i{
-  animation:sp-puff 1100ms cubic-bezier(.16,.7,.3,1) forwards;
+  animation:sp-puff 1400ms cubic-bezier(.12,.62,.24,1) forwards;
 }
 @keyframes sp-puff{
-  0%   { opacity:0;   transform:translate3d(0,0,0) scale(.3) }
-  22%  { opacity:.6 }
-  100% { opacity:0;   transform:translate3d(var(--dx), var(--dy), 0) scale(1.9) }
+  0%   { opacity:0;   transform:translate3d(0,0,0) rotate(0) scale(.34) }
+  14%  { opacity:.92 }
+  50%  { opacity:.6 }
+  100% { opacity:0;   transform:translate3d(var(--dx), var(--dy), 0)
+                                rotate(var(--rot)) scale(2.3) }
 }
+
+/* A light runs down the spine as it clears the shelf — the frame catching
+   the room. Pure overlay, no extra element in the markup. */
+.sp-frame::before{
+  content:""; position:absolute; inset:2px; opacity:0;
+  background:linear-gradient(105deg,
+    transparent 34%,
+    color-mix(in srgb, var(--c) 55%, white) 48%,
+    transparent 62%);
+  mix-blend-mode:screen;
+}
+.spine[aria-expanded="true"] .sp-frame::before{
+  animation:sp-sheen 900ms ease-out 90ms 1;
+}
+@keyframes sp-sheen{
+  0%   { opacity:0;  transform:translateY(-120%) }
+  35%  { opacity:.85 }
+  100% { opacity:0;  transform:translateY(120%) }
+}
+
+/* The neighbours lean into the gap the book left behind. */
+.spine.is-lean-l{ transform:translateY(-2px) rotateY(9deg)  translateX(5px) }
+.spine.is-lean-r{ transform:translateY(-2px) rotateY(-9deg) translateX(-5px) }
 
 @media (prefers-reduced-motion: reduce){
   .sp-mist{ display:none }
+  .sp-frame::before{ display:none }
+  .spine.is-lean-l, .spine.is-lean-r{ transform:none }
   .spine, .spine:hover, .spine:focus-visible{ transform:none; transition:none }
   /* the open book still reads as open, just without the pull */
   .spine[aria-expanded="true"]{

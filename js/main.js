@@ -49,13 +49,28 @@
   }
 
   /* ---- The sound of a book coming off the shelf ----
-     Synthesised rather than shipped: a short noise burst through a bandpass
-     that sweeps down is the card sliding against its neighbours, and a quiet
-     triangle blip gives each book its own pitch. Costs no bytes, and the
-     AudioContext is built inside the click so autoplay policy is satisfied.
-     Decorative, so it is skipped under prefers-reduced-motion and any failure
-     is swallowed — the shelf must work with the speakers off. */
+     Synthesised, not shipped. Four layers, because a single noise burst is
+     what a cheap UI sound is made of:
+       1. friction — noise through a bandpass sweeping down, with an LFO on
+          the filter so the slide is uneven the way card stock actually is;
+       2. body    — a short sine drop, the weight of the spine clearing;
+       3. neon    — two detuned oscillators into a short feedback delay, so
+          the tone shimmers like the frame it came from;
+       4. dust    — a quiet high tail that settles under the puffs.
+     Every layer is randomised per click, so pulling the same book twice
+     never sounds identical. Decorative: skipped under reduced motion, and
+     any failure is swallowed — the shelf works with the speakers off. */
   var sfxCtx = null, noiseBuf = null;
+
+  function sfxNoise() {
+    if (noiseBuf) return noiseBuf;
+    var len = Math.floor(sfxCtx.sampleRate * 1.0);
+    noiseBuf = sfxCtx.createBuffer(1, len, sfxCtx.sampleRate);
+    var d = noiseBuf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    return noiseBuf;
+  }
+
   function shelfSound(kind, seed) {
     if (REDUCED) return;
     try {
@@ -63,46 +78,97 @@
       if (!AC) return;
       if (!sfxCtx) sfxCtx = new AC();
       if (sfxCtx.state === "suspended") sfxCtx.resume();
-      var t = sfxCtx.currentTime;
 
-      if (!noiseBuf) {
-        var len = Math.floor(sfxCtx.sampleRate * 0.3);
-        noiseBuf = sfxCtx.createBuffer(1, len, sfxCtx.sampleRate);
-        var d = noiseBuf.getChannelData(0);
-        for (var i = 0; i < len; i++) {
-          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 1.6);
-        }
+      var ctx = sfxCtx, t = ctx.currentTime, pull = kind === "pull";
+      var rnd = function (a, b) { return a + Math.random() * (b - a); };
+
+      /* master bus: a little compression glues the layers and stops peaks */
+      var master = ctx.createGain();
+      master.gain.value = pull ? 0.85 : 0.5;
+      var comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -16; comp.ratio.value = 5;
+      comp.attack.value = 0.003; comp.release.value = 0.15;
+      var bus = master;
+      if (ctx.createStereoPanner) {
+        var pan = ctx.createStereoPanner();
+        pan.pan.value = rnd(-0.3, 0.3);
+        master.connect(pan); pan.connect(comp);
+      } else {
+        master.connect(comp);
       }
+      comp.connect(ctx.destination);
 
-      var src = sfxCtx.createBufferSource();
-      src.buffer = noiseBuf;
-      var bp = sfxCtx.createBiquadFilter();
-      bp.type = "bandpass";
-      bp.Q.value = 0.9;
-      var g = sfxCtx.createGain();
-      var out = kind === "pull"
-        ? { from: 2600, to: 700, peak: 0.15, end: 0.27 }
-        : { from: 900, to: 2100, peak: 0.08, end: 0.19 };
-      bp.frequency.setValueAtTime(out.from, t);
-      bp.frequency.exponentialRampToValueAtTime(out.to, t + out.end - 0.02);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(out.peak, t + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + out.end);
-      src.connect(bp); bp.connect(g); g.connect(sfxCtx.destination);
-      src.start(t); src.stop(t + 0.32);
+      /* 1 — friction */
+      var dur = pull ? rnd(0.30, 0.40) : 0.22;
+      var fr = ctx.createBufferSource();
+      fr.buffer = sfxNoise();
+      fr.playbackRate.value = rnd(0.88, 1.12);
+      var bp = ctx.createBiquadFilter();
+      bp.type = "bandpass"; bp.Q.value = rnd(1.0, 1.7);
+      bp.frequency.setValueAtTime(pull ? rnd(1500, 2100) : 800, t);
+      bp.frequency.exponentialRampToValueAtTime(pull ? rnd(380, 560) : rnd(1500, 1900), t + dur);
+      var lfo = ctx.createOscillator();
+      lfo.type = "sawtooth"; lfo.frequency.value = rnd(16, 34);
+      var lfoG = ctx.createGain(); lfoG.gain.value = rnd(180, 420);
+      lfo.connect(lfoG); lfoG.connect(bp.frequency);
+      var frG = ctx.createGain();
+      frG.gain.setValueAtTime(0.0001, t);
+      frG.gain.linearRampToValueAtTime(pull ? rnd(0.16, 0.22) : 0.1, t + 0.035);
+      frG.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      var frLp = ctx.createBiquadFilter();
+      frLp.type = "lowpass"; frLp.frequency.value = rnd(4200, 5600);
+      fr.connect(bp); bp.connect(frLp); frLp.connect(frG); frG.connect(bus);
+      lfo.start(t); lfo.stop(t + dur);
+      fr.start(t); fr.stop(t + dur + 0.02);
 
-      if (kind === "pull") {
-        /* C D E G A — any two books sound consonant together */
+      /* 2 — body */
+      var body = ctx.createOscillator();
+      body.type = "sine";
+      body.frequency.setValueAtTime(rnd(150, 195), t);
+      body.frequency.exponentialRampToValueAtTime(rnd(66, 88), t + 0.14);
+      var bodyG = ctx.createGain();
+      bodyG.gain.setValueAtTime(0.0001, t + 0.01);
+      bodyG.gain.linearRampToValueAtTime(pull ? 0.15 : 0.07, t + 0.03);
+      bodyG.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+      body.connect(bodyG); bodyG.connect(bus);
+      body.start(t); body.stop(t + 0.22);
+
+      if (pull) {
+        /* 3 — neon tone, C D E G A so any two books stay consonant */
         var scale = [523.25, 587.33, 659.25, 783.99, 880.0];
-        var osc = sfxCtx.createOscillator();
-        osc.type = "triangle";
-        osc.frequency.value = scale[(seed || 0) % scale.length];
-        var og = sfxCtx.createGain();
-        og.gain.setValueAtTime(0.0001, t + 0.05);
-        og.gain.exponentialRampToValueAtTime(0.06, t + 0.09);
-        og.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-        osc.connect(og); og.connect(sfxCtx.destination);
-        osc.start(t + 0.05); osc.stop(t + 0.6);
+        var f = scale[(seed || 0) % scale.length];
+        var lp = ctx.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 3800;
+        var tone = ctx.createGain();
+        tone.gain.setValueAtTime(0.0001, t + 0.05);
+        tone.gain.exponentialRampToValueAtTime(0.09, t + 0.09);
+        tone.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+        var o1 = ctx.createOscillator(); o1.type = "triangle"; o1.frequency.value = f;
+        var o2 = ctx.createOscillator(); o2.type = "sine";
+        o2.frequency.value = f * 2; o2.detune.value = rnd(-9, 9);
+        var o2g = ctx.createGain(); o2g.gain.value = 0.4;
+        o1.connect(lp); o2.connect(o2g); o2g.connect(lp);
+        lp.connect(tone); tone.connect(bus);
+        /* short feedback delay = the shimmer of the frame it came out of */
+        var dl = ctx.createDelay(0.5); dl.delayTime.value = rnd(0.09, 0.13);
+        var fb = ctx.createGain(); fb.gain.value = 0.3;
+        var wet = ctx.createGain(); wet.gain.value = 0.35;
+        tone.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(bus);
+        o1.start(t + 0.05); o1.stop(t + 0.75);
+        o2.start(t + 0.05); o2.stop(t + 0.75);
+
+        /* 4 — dust settling, under the visual puffs */
+        var air = ctx.createBufferSource();
+        air.buffer = sfxNoise();
+        air.playbackRate.value = rnd(0.7, 1.0);
+        var hp = ctx.createBiquadFilter();
+        hp.type = "highpass"; hp.frequency.value = rnd(2800, 4000);
+        var airG = ctx.createGain();
+        airG.gain.setValueAtTime(0.0001, t + 0.04);
+        airG.gain.linearRampToValueAtTime(0.016, t + 0.12);
+        airG.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+        air.connect(hp); hp.connect(airG); airG.connect(bus);
+        air.start(t + 0.04); air.stop(t + 0.9);
       }
     } catch (e) { /* no sound is fine; a broken shelf is not */ }
   }
@@ -127,6 +193,9 @@
       function openBook(id) {
         if (openId === id) {  /* toggle closed */
           spines[id].setAttribute("aria-expanded", "false");
+          Object.keys(spines).forEach(function (k) {
+            spines[k].classList.remove("is-lean-l", "is-lean-r");
+          });
           note.hidden = true; openId = null;
           shelfSound("push");
           return;
@@ -135,6 +204,14 @@
         Object.keys(spines).forEach(function (k) {
           spines[k].setAttribute("aria-expanded", k === id ? "true" : "false");
         });
+        /* the books either side tip into the gap that just opened */
+        var order = Object.keys(spines);
+        var at = order.indexOf(id);
+        order.forEach(function (k, i) {
+          spines[k].classList.toggle("is-lean-l", i === at - 1);
+          spines[k].classList.toggle("is-lean-r", i === at + 1);
+        });
+
         var b = BOOKS.find(function (x) { return x.id === id; });
         note.hidden = false;
         /* carry the spine's neon into the panel so the two read as one */
