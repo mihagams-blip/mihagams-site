@@ -56,8 +56,16 @@ any length keeps its rhythm; set `spine` to a CSS colour to override one,
 or `img` to put cover art behind the frame. Spines are a fixed height and
 long titles wrap into a second column rather than towering. Opening a book
 pulls it toward the reader in 3D (the shelf carries a `perspective`) and
-blooms five soft puffs of dust around it; both are skipped entirely under
-`prefers-reduced-motion`.
+blooms five soft puffs of dust around it, and a short sound plays. All three
+are skipped entirely under `prefers-reduced-motion`.
+
+The sound is synthesised in `js/main.js`, not shipped as a file: a noise burst
+through a bandpass sweeping 2.6 kHz → 700 Hz is the card sliding against its
+neighbours, plus a quiet triangle blip pitched per book from a C-D-E-G-A
+scale, so any two books sound consonant together. Closing plays the sweep in
+reverse, quieter. The AudioContext is built inside the click, which satisfies
+autoplay policy, and every failure is swallowed — the shelf has to work with
+the speakers off.
 
 **One CSS trap worth remembering:** the reveal-on-scroll utility must animate
 the independent `translate` property, never `transform`. It sits late in the

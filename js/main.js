@@ -48,6 +48,65 @@
     });
   }
 
+  /* ---- The sound of a book coming off the shelf ----
+     Synthesised rather than shipped: a short noise burst through a bandpass
+     that sweeps down is the card sliding against its neighbours, and a quiet
+     triangle blip gives each book its own pitch. Costs no bytes, and the
+     AudioContext is built inside the click so autoplay policy is satisfied.
+     Decorative, so it is skipped under prefers-reduced-motion and any failure
+     is swallowed — the shelf must work with the speakers off. */
+  var sfxCtx = null, noiseBuf = null;
+  function shelfSound(kind, seed) {
+    if (REDUCED) return;
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!sfxCtx) sfxCtx = new AC();
+      if (sfxCtx.state === "suspended") sfxCtx.resume();
+      var t = sfxCtx.currentTime;
+
+      if (!noiseBuf) {
+        var len = Math.floor(sfxCtx.sampleRate * 0.3);
+        noiseBuf = sfxCtx.createBuffer(1, len, sfxCtx.sampleRate);
+        var d = noiseBuf.getChannelData(0);
+        for (var i = 0; i < len; i++) {
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 1.6);
+        }
+      }
+
+      var src = sfxCtx.createBufferSource();
+      src.buffer = noiseBuf;
+      var bp = sfxCtx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.Q.value = 0.9;
+      var g = sfxCtx.createGain();
+      var out = kind === "pull"
+        ? { from: 2600, to: 700, peak: 0.15, end: 0.27 }
+        : { from: 900, to: 2100, peak: 0.08, end: 0.19 };
+      bp.frequency.setValueAtTime(out.from, t);
+      bp.frequency.exponentialRampToValueAtTime(out.to, t + out.end - 0.02);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(out.peak, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + out.end);
+      src.connect(bp); bp.connect(g); g.connect(sfxCtx.destination);
+      src.start(t); src.stop(t + 0.32);
+
+      if (kind === "pull") {
+        /* C D E G A — any two books sound consonant together */
+        var scale = [523.25, 587.33, 659.25, 783.99, 880.0];
+        var osc = sfxCtx.createOscillator();
+        osc.type = "triangle";
+        osc.frequency.value = scale[(seed || 0) % scale.length];
+        var og = sfxCtx.createGain();
+        og.gain.setValueAtTime(0.0001, t + 0.05);
+        og.gain.exponentialRampToValueAtTime(0.06, t + 0.09);
+        og.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+        osc.connect(og); og.connect(sfxCtx.destination);
+        osc.start(t + 0.05); osc.stop(t + 0.6);
+      }
+    } catch (e) { /* no sound is fine; a broken shelf is not */ }
+  }
+
   /* ---- Books: shelf of disclosure buttons + one shared note panel.
      Built to grow — spines wrap, and the whole district (plus its nav
      links) disappears cleanly when BOOKS is empty. ---- */
@@ -68,8 +127,11 @@
       function openBook(id) {
         if (openId === id) {  /* toggle closed */
           spines[id].setAttribute("aria-expanded", "false");
-          note.hidden = true; openId = null; return;
+          note.hidden = true; openId = null;
+          shelfSound("push");
+          return;
         }
+        shelfSound("pull", BOOKS.findIndex(function (x) { return x.id === id; }));
         Object.keys(spines).forEach(function (k) {
           spines[k].setAttribute("aria-expanded", k === id ? "true" : "false");
         });
