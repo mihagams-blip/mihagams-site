@@ -1,15 +1,21 @@
 # Summary — GAM(E)S personal site
 
 ## What this is
-Miha Gams' personal site: 13 AI-built projects (each with a personal
-"why I made it"), 5 Suno tracks with a live skyline equaliser, a growing
+Miha Gams' personal site: 12 AI-built projects (each with a personal
+"why I made it"), 17 Suno tracks with a live skyline equaliser, a growing
 bookshelf, and a one-sentence outro. Identity: the GAM(E)S neon sign —
 the flickering (E) swings the name between GAMS and GAMES over the
 Neon City animated hero.
 
 ## Decisions of record
 - Featured four (Miha's pick): Steel Signal, BEREM, Front Office, Zadnji spust.
-  Darilnik cut. No filter chips. Mobile grid: 4 cards + "Show all 9".
+  Darilnik and Dino Akademija cut. No filter chips. Mobile grid: 4 + "Show all".
+- Front Office links to front-office-tau.vercel.app (the better of his two builds).
+- Steel Signal's card is gameplay, not the briefing screen — captured with
+  `tools/shot.mjs`, which drives headless Chrome over CDP to click past menus.
+- Vidim cilj's card comes from the current local build, not the old live one.
+- 17 Suno tracks; the list scrolls so Books stays within reach.
+- The footer chamois is the real voxel model, spinnable.
 - Books: 3 AI-sample entries for now; Miha adds his own over time
   (the shelf wraps and scales; `note:null` → "Notes in progress").
 - LinkedIn / YouTube / Suno links: dormant slots, render only when filled.
