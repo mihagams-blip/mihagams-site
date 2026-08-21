@@ -91,6 +91,49 @@
     }
   }
 
+  /* ---- Books: shelf of disclosure buttons + one shared note panel.
+     Built to grow — spines wrap, and the whole district (plus its nav
+     links) disappears cleanly when BOOKS is empty. ---- */
+  var shelf = document.getElementById("shelf");
+  var note = document.getElementById("note");
+  if (shelf && note && typeof BOOKS !== "undefined") {
+    if (!BOOKS.length) {
+      var sec = document.getElementById("books");
+      if (sec) sec.hidden = true;
+      document.querySelectorAll('a[href="#books"]').forEach(function (a) { a.hidden = true; });
+    } else {
+      shelf.innerHTML = BOOKS.map(function (b) {
+        var style = b.img
+          ? 'style="background-image:url(' + b.img + ')"'
+          : 'style="background:' + b.spine + '"';
+        return '<button class="spine" ' + style +
+          ' data-book="' + b.id + '" aria-expanded="false" aria-controls="note">' +
+          '<span class="spine-t">' + b.title + "</span>" +
+          '<span class="spine-a">' + b.author + "</span></button>";
+      }).join("");
+      var spines = {};
+      shelf.querySelectorAll(".spine").forEach(function (btn) {
+        spines[btn.dataset.book] = btn;
+        btn.addEventListener("click", function () { openBook(btn.dataset.book); });
+      });
+      var openId = null;
+      function openBook(id) {
+        if (openId === id) {  /* toggle closed */
+          spines[id].setAttribute("aria-expanded", "false");
+          note.hidden = true; openId = null; return;
+        }
+        Object.keys(spines).forEach(function (k) {
+          spines[k].setAttribute("aria-expanded", k === id ? "true" : "false");
+        });
+        var b = BOOKS.find(function (x) { return x.id === id; });
+        note.hidden = false;
+        note.innerHTML = "<h3>" + b.title + '</h3><p class="note-a">' + b.author + "</p>" +
+          (b.note ? "<p>" + b.note + "</p>" : '<p class="note-pending">Notes in progress.</p>');
+        openId = id;
+      }
+    }
+  }
+
   /* ---- Sticky nav: appears after the hero ---- */
   var nav = document.getElementById("stickynav");
   var hero = document.querySelector(".hero");
