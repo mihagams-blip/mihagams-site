@@ -49,6 +49,13 @@ keeps CLS at a deterministic 0 and the content visible to crawlers. Adding a boo
 progress"). Adding a track = one object in `TRACKS` plus an mp3 in
 `assets/audio/`. Project cards follow the same pattern.
 
+**The shelf.** Each book is a neon HUD panel drawn in CSS — an accent
+octagon with a second copy punched out in ink, plus a ticks layer. The
+accent cycles amber → cyan → magenta → violet by position, so a shelf of
+any length keeps its rhythm; set `spine` to a CSS colour to override one,
+or `img` to put cover art behind the frame. Spines are a fixed height and
+long titles wrap into a second column rather than towering.
+
 **Featured tracks.** Four tracks carry `featured: true` and get a cover card
 above the list. Move the flag to change which four. Drop the artwork in as
 `assets/covers/<id>.webp` (square, 600×600, ≤70 KB) and set `cover` +

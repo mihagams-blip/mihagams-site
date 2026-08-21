@@ -75,6 +75,10 @@
         });
         var b = BOOKS.find(function (x) { return x.id === id; });
         note.hidden = false;
+        /* carry the spine's neon into the panel so the two read as one */
+        var hue = getComputedStyle(spines[id]).getPropertyValue("--c").trim();
+        note.style.borderLeftColor = hue;
+        note.style.setProperty("--c", hue);
         note.innerHTML = "<h3>" + b.title + '</h3><p class="note-a">' + b.author + "</p>" +
           (b.note ? "<p>" + b.note + "</p>" : '<p class="note-pending">Notes in progress.</p>');
         openId = id;

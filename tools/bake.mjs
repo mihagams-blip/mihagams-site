@@ -77,11 +77,21 @@ const tracks = TRACKS.map((tr) => {
     `<span class="t-dur">${tr.duration}</span></button>${chip}${ext}</li>`;
 }).join("\n");
 
-/* ---- shelf ---- */
-const shelf = BOOKS.map((b) => {
-  const style = b.img ? `style="background-image:url(${b.img})"` : `style="background:${b.spine}"`;
-  return `<button class="spine" ${style} data-book="${b.id}" aria-expanded="false" aria-controls="note">` +
-    `<span class="spine-t">${esc(b.title)}</span><span class="spine-a">${esc(b.author)}</span></button>`;
+/* ---- shelf ----
+   Each book is a neon HUD panel rather than a coloured block: the accent
+   cycles through the site's four neon hues so a shelf of any length keeps
+   its rhythm, and `spine` overrides the cycle when a book wants its own. */
+const SHELF_HUES = ["var(--sodium-hi)", "var(--cyan)", "var(--magenta)", "var(--violet)"];
+const shelf = BOOKS.map((b, i) => {
+  const hue = b.spine || SHELF_HUES[i % SHELF_HUES.length];
+  const art = b.img ? ` sp-has-art" style="--c:${hue};--art:url(${b.img})` : `" style="--c:${hue}`;
+  return `<button class="spine${art}" data-book="${b.id}" aria-expanded="false" aria-controls="note">` +
+    `<span class="sp-frame" aria-hidden="true"></span>` +
+    `<span class="sp-ticks" aria-hidden="true"></span>` +
+    `<span class="sp-no" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>` +
+    `<span class="sp-body"><span class="sp-t">${esc(b.title)}</span>` +
+    `<span class="sp-a">${esc(b.author)}</span></span>` +
+    `</button>`;
 }).join("\n");
 
 /* ---- splice ---- */

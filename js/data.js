@@ -283,15 +283,16 @@ const TRACKS = [
 ];
 
 /* Sample entries (Miha will replace/extend — the shelf is built to grow).
-   spine: color hex from the site palette; img: optional spine texture. */
+   spine: null cycles the four neon hues (amber, cyan, magenta, violet);
+   set a CSS colour to override. img: optional cover art behind the frame. */
 const BOOKS = [
   { id: "meditations", title: "Meditations", author: "Marcus Aurelius",
-    spine: "#9DBEF2", img: null,
+    spine: null, img: null,
     note: "A Roman emperor's private notebook, and still the best manual for a loud century. Read slowly, twice." },
   { id: "sapiens", title: "Sapiens", author: "Yuval Noah Harari",
-    spine: "#E8873A", img: null,
+    spine: null, img: null,
     note: "The trick that built the world: strangers cooperating around shared stories. Explains money, gods and brands in one move." },
   { id: "thinking-fast-slow", title: "Thinking, Fast and Slow", author: "Daniel Kahneman",
-    spine: "#D96BA8", img: null,
+    spine: null, img: null,
     note: "Two systems, one owner, constant arguments. The book that made me distrust my first answer — usefully." }
 ];
