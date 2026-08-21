@@ -296,3 +296,41 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
   .wlab{ font-size:8.5px }
   main section{ padding:40px var(--gutter) }
 }
+
+/* ---------------- TRACKS ---------------- */
+.tracks{ margin-top:14px }
+.trackrow{
+  display:flex; align-items:center; gap:12px;
+  border:1px solid var(--edge); border-top:none;
+  padding-right:14px;
+}
+.trackrow:first-child{ border-top:1px solid var(--edge) }
+.track{
+  flex:1; display:flex; align-items:center; gap:14px;
+  background:none; border:none; color:var(--text);
+  font-family:var(--body); font-size:14.5px;
+  padding:13px 0 13px 14px; cursor:pointer; text-align:left;
+  min-height:44px;
+}
+.t-btn{
+  width:34px; height:34px; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--magenta); color:var(--magenta);
+}
+.t-btn svg{ width:12px; height:12px }
+.track.is-playing .t-btn{ background:var(--magenta); color:var(--ink) }
+.track:hover .t-btn{ box-shadow:0 0 14px -2px rgba(217,107,168,.7) }
+.t-title{ flex:1 }
+.t-genre{ font-family:var(--mono); font-size:11px; color:var(--dim) }
+.t-dur{ font-family:var(--mono); font-size:11px; color:var(--dim); font-variant-numeric:tabular-nums }
+.t-for{
+  font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+  color:var(--beam); border:1px solid var(--edge); padding:3px 8px;
+  text-transform:uppercase; white-space:nowrap;
+}
+.t-ext{ font-family:var(--mono); font-size:11px; color:var(--sodium-hi); text-decoration:none }
+.t-err{ font-family:var(--mono); font-size:10px; color:#E36B6B; letter-spacing:.1em; text-transform:uppercase }
+@media (max-width:600px){
+  .t-genre{ display:none }
+  .t-for{ display:none }
+}
