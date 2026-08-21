@@ -36,7 +36,15 @@ python3 -m http.server 8108
 
 ## Content updates
 
-Everything editable lives in `js/data.js`. Adding a book = one object in
+Everything editable lives in `js/data.js`. After editing it, run:
+
+```bash
+node tools/bake.mjs
+```
+
+This bakes the content into `index.html` (cards, tracks, shelf, HUD counts).
+The page ships fully rendered HTML — JS is interactivity only, which is what
+keeps CLS at a deterministic 0 and the content visible to crawlers. Adding a book = one object in
 `BOOKS` (the shelf wraps and scales; `note: null` renders "Notes in
 progress"). Adding a track = one object in `TRACKS` plus an mp3 in
 `assets/audio/`. Project cards follow the same pattern.

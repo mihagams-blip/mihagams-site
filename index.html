@@ -13,7 +13,6 @@
 <meta property="og:image" content="https://mihagams.vercel.app/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230A0710'/><rect x='5' y='12' width='5' height='16' fill='%23E8873A'/><rect x='13' y='6' width='6' height='22' fill='%23D96BA8'/><rect x='22' y='15' width='5' height='13' fill='%239DBEF2'/></svg>">
-<link rel="preload" as="font" type="font/woff2" href="fonts/bigshoulders-display.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/poster.webp" fetchpriority="high">
 <link rel="stylesheet" href="style.css">
 <script type="application/ld+json">
@@ -51,7 +50,9 @@
   </div>
 </header>
 
-<div class="hud" id="hud" aria-label="Site stats"><!-- filled by main.js from data --></div>
+<div class="hud" id="hud" aria-label="Site stats"><!--BAKE:hud-->
+<span><b>13</b> builds</span><span><b>9</b> live</span><span><b>5</b> tracks</span><span>Slovenia</span><span>2026</span>
+<!--/BAKE:hud--></div>
 
 <nav class="stickynav" id="stickynav" aria-label="Main">
   <a class="mark" href="#top" aria-label="Back to top">
@@ -66,10 +67,27 @@
   <section id="projects" aria-labelledby="h-projects" class="s-projects">
     <p class="eyebrow accent-beam">01 / The Lab</p>
     <h2 id="h-projects">Projects</h2>
-    <div id="featured" class="featured"></div>
+    <div id="featured" class="featured"><!--BAKE:featured-->
+<article class="card card--big"><a class="cardlink" href="https://steel-signal-n43n.vercel.app/" aria-label="Steel Signal — open live"><div class="shot"><img src="assets/projects/steel-signal.webp" width="1200" height="750" alt="Mission briefing 'Signal on the Vovcha' over a dark tactical map." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Steel Signal</h3><p class="meta">Game · 2026 · Three.js · strategy · drones + EW</p><p class="cdesc">A turn-based hex wargame for the drone age — electronic warfare, strike drones and fragile supply lines.</p><div class="why"><span class="wlab">Why I made it</span><p>Panzer Corps taught me to love hexes; the drone war rewrote the rules. Nobody had built the sequel that understands both, so I did.</p></div></div></a></article>
+<article class="card card--big"><a class="cardlink" href="https://berem.vercel.app/" aria-label="BEREM — open live"><div class="shot"><img src="assets/projects/berem.webp" width="1200" height="750" alt="Colorful menu of reading-game modes on a pastel sky background." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>BEREM</h3><p class="meta">Game · 2026 · kids · reading · offline</p><p class="cdesc">A Slovene reading game for first grade — nine modes from missing letters to dinosaurs and car brands.</p><div class="why"><span class="wlab">Why I made it</span><p>My first-grader was learning to read. The levels follow his school syllables, and the reward sounds are his own recorded voice.</p></div></div></a></article>
+<article class="card card--big"><a class="cardlink" href="https://frontoffice2.vercel.app/" aria-label="Front Office — open live"><div class="shot"><img src="assets/projects/front-office.webp" width="1200" height="750" alt="Front Office game screen with a cream-colored management dashboard." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Front Office</h3><p class="meta">Game · 2026 · React · cards · basketball</p><p class="cdesc">A basketball GM dynasty card game — draft, trade and coach a Slovenian club through the seasons.</p><div class="why"><span class="wlab">Why I made it</span><p>Basketball plus spreadsheets is my comfort food. I wanted the GM fantasy without the 4 GB install.</p></div></div></a></article>
+<article class="card card--big"><div class="shot"><img src="assets/projects/zadnji-spust.webp" width="1200" height="750" alt="Pixel-art title screen 'Final Descent' with a spacecraft over a ridge." loading="lazy" decoding="async"></div><div class="cbody"><h3>Zadnji spust</h3><p class="meta">Game · 2026 · pixel art · adventure · procedural music</p><p class="cdesc">A cinematic pixel-art adventure in two acts — The Dig meets Foundation, with a shooter interlude.</p><div class="why"><span class="wlab">Why I made it</span><p>I grew up on LucasArts. This is my love letter: slow scenes, a radio voice, and music that knows when to go quiet.</p></div></div></article>
+<!--/BAKE:featured--></div>
     <div id="grid-wrap">
-      <ul id="grid" class="grid"></ul>
-      <button id="showall" class="showall" hidden aria-expanded="false">Show all <span id="showall-n"></span></button>
+      <ul id="grid" class="grid"><!--BAKE:grid-->
+<li class="card"><a class="cardlink" href="https://bad-orbit.vercel.app/" aria-label="Bad Orbit — open live"><div class="shot"><img src="assets/projects/bad-orbit.webp" width="1200" height="750" alt="Low-poly planet with the Bad Orbit title and a Defend button." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Bad Orbit</h3><p class="meta">Game · 2026 · Three.js · tactics</p><p class="cdesc">Bad North on a mini-planet: defend a rotating world from landing craft, squad by squad.</p><div class="why"><span class="wlab">Why I made it</span><p>Could a whole tactics battle fit on a planet the size of a marble? Turns out yes — and spinning it is half the fun.</p></div></div></a></li>
+<li class="card"><a class="cardlink" href="https://mihagams-blip.github.io/dino-akademija/" aria-label="Dino Akademija — open live"><div class="shot"><img src="assets/projects/dino-akademija.webp" width="1200" height="750" alt="Night camp menu with a tent, campfire and expedition choices." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Dino Akademija</h3><p class="meta">Game · 2026 · kids · education · offline</p><p class="cdesc">A night-expedition learning game for young paleontologists — phone-first, works offline.</p><div class="why"><span class="wlab">Why I made it</span><p>My six-year-old wanted to be a paleontologist. No cheap dopamine here: the skeleton comes alive only at ten out of ten.</p></div></div></a></li>
+<li class="card"><a class="cardlink" href="https://tvojpremik.si/" aria-label="Tvoj premik — open live"><div class="shot"><img src="assets/projects/tvoj-premik.webp" width="1200" height="750" alt="Retreat landing page with a hero photo of two women by the lake." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Tvoj premik</h3><p class="meta">Website · 2026 · event · client work</p><p class="cdesc">Event site for a women's retreat at Lake Bled — waitlist, program and a calm, warm identity.</p><div class="why"><span class="wlab">Why I made it</span><p>A real client and a real weekend at Bled. Design to deploy to analytics, shipped by one person and an AI.</p></div></div></a></li>
+<li class="card"><a class="cardlink" href="https://neon-city-loop.vercel.app/" aria-label="Neon City Loop — open live"><div class="shot"><img src="assets/projects/neon-city.webp" width="1200" height="750" alt="Neon-lit anime cityscape with searchlights and giant billboards." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Neon City Loop</h3><p class="meta">Website · 2026 · animation · art</p><p class="cdesc">A one-page gallery for a single animated cyberpunk frame — searchlights, window flicker, billboards.</p><div class="why"><span class="wlab">Why I made it</span><p>One animated frame deserved a whole page. Its skyline is now the sky above this site.</p></div></div></a></li>
+<li class="card"><div class="shot"><img src="assets/projects/minas-tirith.webp" width="1200" height="750" alt="White voxel citadel rising in terraced rings against black." loading="lazy" decoding="async"></div><div class="cbody"><h3>Minas Tirith</h3><p class="meta">Website · 2026 · Blender · 3D · scrollytelling</p><p class="cdesc">A scrollytelling diorama of the White City, rebuilt phase by phase in Blender.</p><div class="why"><span class="wlab">Why I made it</span><p>I wanted to watch a city grow the way a chronicle reads — five phases, one slow scroll.</p></div></div></li>
+<li class="card"><a class="cardlink" href="https://senbon-torii.vercel.app/" aria-label="Senbon Torii — open live"><div class="shot"><img src="assets/projects/senbon-torii.webp" width="1200" height="750" alt="Dark title screen reading 'Pot skozi tisoč vrat' with kanji." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Senbon Torii</h3><p class="meta">Website · 2026 · Three.js · 3D walk</p><p class="cdesc">A first-person walk through a thousand vermilion gates, with light that shifts as you go.</p><div class="why"><span class="wlab">Why I made it</span><p>Fushimi Inari without the plane ticket. Walking meditation, rendered.</p></div></div></a></li>
+<li class="card"><div class="shot"><img src="assets/projects/oxa-spo2.webp" width="1200" height="750" alt="Product page hero reading 'Every breath counts' with a dark wristband." loading="lazy" decoding="async"></div><div class="cbody"><h3>OXA SpO₂</h3><p class="meta">Website · 2026 · concept · health</p><p class="cdesc">Concept page for a sports SpO₂ wristband — 'every breath counts', from track to sleep.</p><div class="why"><span class="wlab">Why I made it</span><p>Exploring what a health wearable's story should feel like when the stakes are personal.</p></div></div></li>
+<li class="card"><div class="shot"><img src="assets/projects/vidim-cilj.webp" width="1200" height="750" alt="Blue and gold charity site with a bold headline." loading="lazy" decoding="async"></div><div class="cbody"><h3>Vidim cilj</h3><p class="meta">Website · 2026 · charity · accessibility</p><p class="cdesc">Site for a charity bringing sport to the visually impaired — accessibility-first by definition.</p><div class="why"><span class="wlab">Why I made it</span><p>For athletes who can't see the finish line and aim for it anyway. The most accessible page I know how to build.</p></div></div></li>
+<li class="card"><a class="cardlink" href="https://igrica-raketa.vercel.app/" aria-label="Raketa nad mestom — open live"><div class="shot"><img src="assets/projects/igrica-raketa.webp" width="1200" height="750" alt="Retro pixel city at night with a small rocket sprite." loading="lazy" decoding="async"></div><div class="cbody"><span class="live">● Live</span><h3>Raketa nad mestom</h3><p class="meta">Game · 2026 · arcade · kids</p><p class="cdesc">A pixel arcade rocket for two brothers — dodge, land, refuel, brag.</p><div class="why"><span class="wlab">Why I made it</span><p>My sons asked for a rocket game over breakfast. Version two shipped by the weekend.</p></div></div></a></li>
+<!--/BAKE:grid--></ul>
+      <!--BAKE:showall-->
+<button id="showall" class="showall" aria-expanded="false">Show all <span id="showall-n">9</span></button>
+<!--/BAKE:showall-->
     </div>
   </section>
 
@@ -78,14 +96,24 @@
     <h2 id="h-music">Music</h2>
     <canvas id="viz" width="900" height="120" aria-hidden="true"></canvas>
     <p class="viz-alt sr-only">Audio visualizer</p>
-    <ul id="tracks" class="tracks"></ul>
+    <ul id="tracks" class="tracks"><!--BAKE:tracks-->
+<li class="trackrow" data-row="night-grid-advance"><button class="track" data-track="night-grid-advance" aria-pressed="false" aria-label="Play Night Grid Advance — synthwave"><span class="t-btn" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg></span><span class="t-title">Night Grid Advance</span><span class="t-genre">synthwave</span><span class="t-dur">1:28</span></button><span class="t-for">for Neon City Loop</span></li>
+<li class="trackrow" data-row="kintsugi-pulse"><button class="track" data-track="kintsugi-pulse" aria-pressed="false" aria-label="Play Kintsugi Pulse — ambient"><span class="t-btn" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg></span><span class="t-title">Kintsugi Pulse</span><span class="t-genre">ambient</span><span class="t-dur">2:48</span></button><span class="t-for">for Senbon Torii</span></li>
+<li class="trackrow" data-row="celestial-folk-suite"><button class="track" data-track="celestial-folk-suite" aria-pressed="false" aria-label="Play Celestial Folk Suite — folk orchestral"><span class="t-btn" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg></span><span class="t-title">Celestial Folk Suite</span><span class="t-genre">folk orchestral</span><span class="t-dur">2:49</span></button><span class="t-for">for Minas Tirith</span></li>
+<li class="trackrow" data-row="the-gilded-march"><button class="track" data-track="the-gilded-march" aria-pressed="false" aria-label="Play The Gilded March — epic march"><span class="t-btn" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg></span><span class="t-title">The Gilded March</span><span class="t-genre">epic march</span><span class="t-dur">3:10</span></button></li>
+<li class="trackrow" data-row="cardboard-dynasty"><button class="track" data-track="cardboard-dynasty" aria-pressed="false" aria-label="Play Cardboard Dynasty"><span class="t-btn" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg></span><span class="t-title">Cardboard Dynasty</span><span class="t-dur">0:51</span></button><span class="t-for">for Front Office</span></li>
+<!--/BAKE:tracks--></ul>
     <p class="credit">Made with Suno.</p>
   </section>
 
   <section id="books" aria-labelledby="h-books" class="s-books">
     <p class="eyebrow accent-sodium">03 / The Shelf</p>
     <h2 id="h-books">Books</h2>
-    <div id="shelf" class="shelf"></div>
+    <div id="shelf" class="shelf"><!--BAKE:shelf-->
+<button class="spine" style="background:#9DBEF2" data-book="meditations" aria-expanded="false" aria-controls="note"><span class="spine-t">Meditations</span><span class="spine-a">Marcus Aurelius</span></button>
+<button class="spine" style="background:#E8873A" data-book="sapiens" aria-expanded="false" aria-controls="note"><span class="spine-t">Sapiens</span><span class="spine-a">Yuval Noah Harari</span></button>
+<button class="spine" style="background:#D96BA8" data-book="thinking-fast-slow" aria-expanded="false" aria-controls="note"><span class="spine-t">Thinking, Fast and Slow</span><span class="spine-a">Daniel Kahneman</span></button>
+<!--/BAKE:shelf--></div>
     <div id="note" class="notepanel" aria-live="polite" hidden></div>
   </section>
 </main>
@@ -102,11 +130,8 @@
   </div>
 </footer>
 
-<!-- synchronous on purpose: the parser cannot finish (and thus cannot
-     first-paint the document) before these render the content, which is
-     what keeps CLS at a deterministic 0. Total ~30 KB local JS. -->
-<script src="js/data.js"></script>
-<script src="js/main.js"></script>
-<script src="js/audio.js"></script>
+<script src="js/data.js" defer></script>
+<script src="js/main.js" defer></script>
+<script src="js/audio.js" defer></script>
 </body>
 </html>

@@ -5,18 +5,6 @@
     new URLSearchParams(location.search).has("static");
   var SAVE = navigator.connection && navigator.connection.saveData;
 
-  /* ---- HUD (computed from data, never hardcoded) ---- */
-  var hud = document.getElementById("hud");
-  if (hud) {
-    var live = PROJECTS.filter(function (p) { return p.url; }).length;
-    var items = [];
-    if (PROJECTS.length) items.push("<b>" + PROJECTS.length + "</b> builds");
-    if (live) items.push("<b>" + live + "</b> live");
-    if (TRACKS.length) items.push("<b>" + TRACKS.length + "</b> tracks");
-    items.push("Slovenia", "2026");
-    hud.innerHTML = items.map(function (t) { return "<span>" + t + "</span>"; }).join("");
-  }
-
   /* ---- Hero video: near-viewport + idle + never for reduced/saveData ---- */
   var loop = document.getElementById("loop");
   var plate = document.getElementById("plate");
@@ -46,44 +34,18 @@
     else addEventListener("load", arm, { once: true });
   }
 
-  /* ---- Projects: featured row + grid (mobile: 4 + Show all) ---- */
-  function projectCard(p, big) {
-    var tagEl = big ? "article" : "li";
-    var media = '<img src="' + p.img + '" width="1200" height="750" alt="' + p.imgAlt + '" loading="lazy" decoding="async">';
-    var live = p.url ? '<span class="live">● Live</span>' : "";
-    var meta = '<p class="meta">' + p.kind + " · " + p.year + (p.tags.length ? " · " + p.tags.join(" · ") : "") + "</p>";
-    var why = '<div class="why"><span class="wlab">Why I made it</span><p>' + p.why + "</p></div>";
-    var inner =
-      '<div class="shot">' + media + "</div>" +
-      '<div class="cbody">' + live + "<h3>" + p.title + "</h3>" + meta +
-      '<p class="cdesc">' + p.desc + "</p>" + why + "</div>";
-    if (p.url) {
-      return "<" + tagEl + ' class="card' + (big ? " card--big" : "") + '">' +
-        '<a class="cardlink" href="' + p.url + '" aria-label="' + p.title + ' — open live">' + inner + "</a></" + tagEl + ">";
-    }
-    return "<" + tagEl + ' class="card' + (big ? " card--big" : "") + '">' + inner + "</" + tagEl + ">";
-  }
-  var featEl = document.getElementById("featured");
+  /* ---- Projects are baked into the HTML (tools/bake.mjs); JS only
+     wires the mobile expander ---- */
   var gridEl = document.getElementById("grid");
-  if (featEl && gridEl && typeof PROJECTS !== "undefined") {
-    var feat = PROJECTS.filter(function (p) { return p.featured; });
-    var rest = PROJECTS.filter(function (p) { return !p.featured; });
-    featEl.innerHTML = feat.map(function (p) { return projectCard(p, true); }).join("");
-    gridEl.innerHTML = rest.map(function (p) { return projectCard(p, false); }).join("");
-    /* mobile: cards past 4 are collapsed by CSS (no JS at load — that
-       raced first paint and caused a layout shift); JS only expands */
-    var btn = document.getElementById("showall");
-    if (btn && gridEl.children.length > 4) {
-      document.getElementById("showall-n").textContent = rest.length;
-      btn.hidden = false;   /* CSS still hides it on desktop */
-      btn.addEventListener("click", function () {
-        gridEl.classList.add("expanded");
-        btn.setAttribute("aria-expanded", "true");
-        btn.hidden = true;
-        var fifth = gridEl.children[4];
-        if (fifth) fifth.scrollIntoView({ block: "nearest" });
-      });
-    }
+  var btn = document.getElementById("showall");
+  if (gridEl && btn) {
+    btn.addEventListener("click", function () {
+      gridEl.classList.add("expanded");
+      btn.setAttribute("aria-expanded", "true");
+      btn.hidden = true;
+      var fifth = gridEl.children[4];
+      if (fifth) fifth.scrollIntoView({ block: "nearest" });
+    });
   }
 
   /* ---- Books: shelf of disclosure buttons + one shared note panel.
@@ -97,15 +59,6 @@
       if (sec) sec.hidden = true;
       document.querySelectorAll('a[href="#books"]').forEach(function (a) { a.hidden = true; });
     } else {
-      shelf.innerHTML = BOOKS.map(function (b) {
-        var style = b.img
-          ? 'style="background-image:url(' + b.img + ')"'
-          : 'style="background:' + b.spine + '"';
-        return '<button class="spine" ' + style +
-          ' data-book="' + b.id + '" aria-expanded="false" aria-controls="note">' +
-          '<span class="spine-t">' + b.title + "</span>" +
-          '<span class="spine-a">' + b.author + "</span></button>";
-      }).join("");
       var spines = {};
       shelf.querySelectorAll(".spine").forEach(function (btn) {
         spines[btn.dataset.book] = btn;

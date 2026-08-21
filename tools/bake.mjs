@@ -1,0 +1,83 @@
+#!/usr/bin/env node
+/* Bake js/data.js into index.html between <!--BAKE:name--> markers.
+   Run after any data.js edit:  node tools/bake.mjs
+   The page then ships fully rendered HTML; the runtime JS only adds
+   interactivity (video, player, shelf, nav). */
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const dataSrc = readFileSync(join(root, "js/data.js"), "utf8");
+const { SITE, PROJECTS, TRACKS, BOOKS } =
+  new Function(dataSrc + "; return { SITE, PROJECTS, TRACKS, BOOKS };")();
+
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+
+/* ---- HUD ---- */
+const live = PROJECTS.filter((p) => p.url).length;
+const hud = [
+  PROJECTS.length && `<b>${PROJECTS.length}</b> builds`,
+  live && `<b>${live}</b> live`,
+  TRACKS.length && `<b>${TRACKS.length}</b> tracks`,
+  "Slovenia", "2026",
+].filter(Boolean).map((t) => `<span>${t}</span>`).join("");
+
+/* ---- project cards ---- */
+function card(p, big) {
+  const tag = big ? "article" : "li";
+  const inner =
+    `<div class="shot"><img src="${p.img}" width="1200" height="750" alt="${esc(p.imgAlt)}" loading="lazy" decoding="async"></div>` +
+    `<div class="cbody">${p.url ? '<span class="live">● Live</span>' : ""}<h3>${esc(p.title)}</h3>` +
+    `<p class="meta">${esc(p.kind)} · ${p.year}${p.tags.length ? " · " + p.tags.map(esc).join(" · ") : ""}</p>` +
+    `<p class="cdesc">${esc(p.desc)}</p>` +
+    `<div class="why"><span class="wlab">Why I made it</span><p>${esc(p.why)}</p></div></div>`;
+  return p.url
+    ? `<${tag} class="card${big ? " card--big" : ""}"><a class="cardlink" href="${p.url}" aria-label="${esc(p.title)} — open live">${inner}</a></${tag}>`
+    : `<${tag} class="card${big ? " card--big" : ""}">${inner}</${tag}>`;
+}
+const featured = PROJECTS.filter((p) => p.featured).map((p) => card(p, true)).join("\n");
+const rest = PROJECTS.filter((p) => !p.featured);
+const grid = rest.map((p) => card(p, false)).join("\n");
+const showall = rest.length > 4
+  ? `<button id="showall" class="showall" aria-expanded="false">Show all <span id="showall-n">${rest.length}</span></button>`
+  : "";
+
+/* ---- tracks ---- */
+const titleOf = Object.fromEntries(PROJECTS.map((p) => [p.id, p.title]));
+const ICON_PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>';
+const tracks = TRACKS.map((tr) => {
+  const label = `Play ${tr.title}${tr.genre ? " — " + tr.genre : ""}`;
+  const chip = tr.projectId && titleOf[tr.projectId] ? `<span class="t-for">for ${esc(titleOf[tr.projectId])}</span>` : "";
+  const ext = tr.sunoUrl ? `<a class="t-ext" href="${tr.sunoUrl}">Suno ↗</a>`
+    : tr.youtubeUrl ? `<a class="t-ext" href="${tr.youtubeUrl}">YouTube ↗</a>` : "";
+  return `<li class="trackrow" data-row="${tr.id}">` +
+    `<button class="track" data-track="${tr.id}" aria-pressed="false" aria-label="${esc(label)}">` +
+    `<span class="t-btn" aria-hidden="true">${ICON_PLAY}</span>` +
+    `<span class="t-title">${esc(tr.title)}</span>` +
+    (tr.genre ? `<span class="t-genre">${esc(tr.genre)}</span>` : "") +
+    `<span class="t-dur">${tr.duration}</span></button>${chip}${ext}</li>`;
+}).join("\n");
+
+/* ---- shelf ---- */
+const shelf = BOOKS.map((b) => {
+  const style = b.img ? `style="background-image:url(${b.img})"` : `style="background:${b.spine}"`;
+  return `<button class="spine" ${style} data-book="${b.id}" aria-expanded="false" aria-controls="note">` +
+    `<span class="spine-t">${esc(b.title)}</span><span class="spine-a">${esc(b.author)}</span></button>`;
+}).join("\n");
+
+/* ---- splice ---- */
+let html = readFileSync(join(root, "index.html"), "utf8");
+const put = (name, content) => {
+  const re = new RegExp(`(<!--BAKE:${name}-->)[\\s\\S]*?(<!--/BAKE:${name}-->)`);
+  if (!re.test(html)) throw new Error("marker missing: " + name);
+  html = html.replace(re, `$1\n${content}\n$2`);
+};
+put("hud", hud);
+put("featured", featured);
+put("grid", grid);
+put("showall", showall);
+put("tracks", tracks);
+put("shelf", shelf);
+writeFileSync(join(root, "index.html"), html);
+console.log(`baked: ${PROJECTS.length} projects (${live} live), ${TRACKS.length} tracks, ${BOOKS.length} books`);

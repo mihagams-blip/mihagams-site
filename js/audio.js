@@ -28,26 +28,8 @@
   var audio = null, actx = null, analyser = null, freq = null;
   var playing = null, raf = null;
 
-  var titleOf = {};
-  PROJECTS.forEach(function (p) { titleOf[p.id] = p.title; });
-
-  /* ------------------------------------------- render (ONCE) */
-  listEl.innerHTML = TRACKS.map(function (tr) {
-    var label = "Play " + tr.title + (tr.genre ? " — " + tr.genre : "");
-    var chip = tr.projectId && titleOf[tr.projectId]
-      ? '<span class="t-for">for ' + titleOf[tr.projectId] + "</span>" : "";
-    var ext = tr.sunoUrl
-      ? '<a class="t-ext" href="' + tr.sunoUrl + '">Suno ↗</a>'
-      : (tr.youtubeUrl ? '<a class="t-ext" href="' + tr.youtubeUrl + '">YouTube ↗</a>' : "");
-    return '<li class="trackrow" data-row="' + tr.id + '">' +
-      '<button class="track" data-track="' + tr.id + '" aria-pressed="false" aria-label="' + label + '">' +
-        '<span class="t-btn" aria-hidden="true">' + ICON_PLAY + "</span>" +
-        '<span class="t-title">' + tr.title + "</span>" +
-        (tr.genre ? '<span class="t-genre">' + tr.genre + "</span>" : "") +
-        '<span class="t-dur">' + tr.duration + "</span>" +
-      "</button>" + chip + ext + "</li>";
-  }).join("");
-
+  /* ------------------------------------------- rows are baked into the
+     HTML (tools/bake.mjs); attach behavior to the existing buttons */
   var buttons = {};
   listEl.querySelectorAll(".track").forEach(function (btn) {
     buttons[btn.dataset.track] = btn;
