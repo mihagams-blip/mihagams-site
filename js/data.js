@@ -5,7 +5,7 @@
 const SITE = {
   name: "Miha Gams",
   brand: "GAM(E)S",
-  tagline: "A game, a site, a song — AI didn't give me the ideas, it gave me the hands to build them.",
+  tagline: "A game, a site, a song — I just like seeing how they end up.",
   url: "https://mihagams.vercel.app/",
   github: "https://github.com/mihagams-blip",
   linkedin: null,        // dormant slot
