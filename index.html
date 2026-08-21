@@ -102,8 +102,11 @@
   </div>
 </footer>
 
-<script src="js/data.js" defer></script>
-<script src="js/main.js" defer></script>
-<script src="js/audio.js" defer></script>
+<!-- synchronous on purpose: the parser cannot finish (and thus cannot
+     first-paint the document) before these render the content, which is
+     what keeps CLS at a deterministic 0. Total ~30 KB local JS. -->
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/audio.js"></script>
 </body>
 </html>

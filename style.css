@@ -384,3 +384,7 @@ main section{ padding:clamp(56px,9vw,110px) var(--gutter) }
   #grid:not(.expanded) > li:nth-child(n+5){ display:none }
   .showall:not([hidden]){ display:block }
 }
+
+/* pre-render space reservations — belt and braces against CLS */
+.hud{ min-height:52px }
+.shelf{ min-height:178px }
