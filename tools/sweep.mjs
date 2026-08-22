@@ -21,7 +21,7 @@ if (!url || !outDir) { console.error("usage: sweep.mjs <url> <outDir> [WxH,...]"
 const SIZES = (sizesArg || "375x812,500x850,700x900,1280x800,1920x1200,3440x1440")
   .split(",").map((s) => s.split("x").map(Number));
 const FRACS = [0, 0.25, 0.5, 0.75, 1];
-const HIDE = `document.querySelectorAll("header.hero,main,.hud,footer.outro,.stickynav,.rig-layer,.skip").forEach(e=>e.style.visibility="hidden");`;
+const HIDE = `document.querySelectorAll("header.hero,main,.hud,footer.outro,.stickynav,.skip").forEach(e=>e.style.visibility="hidden");`;
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

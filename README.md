@@ -36,7 +36,6 @@ files. Node is not required to run or deploy.
 | `node tools/shot.mjs <url> <out.png> [js] [waitMs]` | Screenshots a page in a throwaway Chrome profile, optionally after running a snippet — this is how the in-game project cards were captured. |
 | `node tools/probe.mjs <url> <js> [waitMs]` | Evaluates an expression in a fresh profile and prints the result. Use it instead of the browser console: a stale cached `main.js` has more than once made working code look broken. |
 | `python3 tools/make-dust.py` | Regenerates `assets/dust.webp`, the shelf's dust-puff mask. |
-| `python3 tools/import-rig.py <sheet.png>` | Normalises a generated SVETILEC sprite sheet into `assets/svetilec.webp` — four identical square cells at one shared scale, so the rig never jumps when it swaps pose. |
 | `python3 tools/import-ronin.py <sheet.png>` | Same for the ronin's three poses, but aligned on their BOTTOM edge — his dangling foot is the anchor the eye tracks, so centring would make him twitch. |
 | `python3 tools/import-busker.py <sheet.png>` | The same again for the guitarist on the Music heading. |
 
@@ -102,31 +101,6 @@ the mask**, not a radial gradient under a mask. Layering a fading gradient
 beneath a wispy mask attenuates the alpha twice and the smoke simply vanishes
 on a dark page.
 
-## SVETILEC 00
-
-A municipal sign-maintenance rig works the empty bands between sections. It
-crosses at ~34 px/s, stops once or twice to check that a heading still lights
-(work light on, a soft cone under it), and after its third job — or six
-minutes — it makes one fast, dark, strut-down run and does not come back that
-session. It went home.
-
-Three things keep it from ever being a nuisance:
-
-- the layer is `z-index: 0` while every section is `z-index: 1`, so it is
-  structurally incapable of covering content — it slides *behind* cards the
-  way a vehicle passes behind a building;
-- it only flies in gaps tall enough to leave clear air above and below, and is
-  disabled below 640px, so on a cramped screen it simply has nowhere to be;
-- it never reacts to the pointer. `pointer-events: none`, no hover, not
-  focusable, `aria-hidden`. It is on the clock, not performing.
-
-Under `prefers-reduced-motion` it is one parked still with no timers at all,
-and `?static=1` never constructs it or fetches the sprite.
-`.sky` is pure CSS and cannot read a query string, so `main.js` sets
-`data-static` on `<html>` and one rule turns its animations off — the switch is
-documented as freezing the page and has to stay true for every layer. The sprite itself
-is only fetched when the first crossing begins, so it costs nothing at load.
-
 ## The city continues
 
 Below the fold the page used to be flat black. `.sky` is a fixed layer behind
@@ -150,9 +124,11 @@ toward it.
 
 **No JavaScript, no timer, no rAF, no image file.** It is driven entirely by
 `animation-timeline: scroll(root block)`, the same construction as the shelf.
-The site already runs one perpetual 60fps callback for SVETILEC and a second
-one was not affordable. A welcome consequence: nothing moves while the page is
-idle.
+Nothing moves while the page is idle, which is the whole point — the layer is
+supposed to give depth, not compete for attention. (It was written this way
+partly to avoid a second perpetual 60fps callback alongside SVETILEC 00, the
+maintenance rig that used to fly the empty bands; the rig has since been removed
+for not fitting the page, and the CSS-only approach is the better one anyway.)
 
 ### The one number
 
@@ -256,10 +232,9 @@ visitor and every Firefox visitor (Gecko still ships
 rather than a stripped one — verified with Chrome's
 `--force-prefers-reduced-motion`. That is also why this block has no
 `prefers-reduced-motion: reduce` rules: one set of numbers serves both the
-animated end state and the fallback, so they cannot drift apart. Unlike
-`.rig-layer` it does **not** clip 48px off the top; the rig is a bright
-discrete object that looked wrong through the sticky nav, whereas a hard
-horizontal cut across a diffuse field is more visible than the field itself.
+animated end state and the fallback, so they cannot drift apart. Unlike the old rig layer it does **not** clip 48px off the top: a hard horizontal cut
+across a diffuse field is more visible than the field itself, and the sticky nav
+is 90% opaque ink anyway.
 
 ## Running locally
 

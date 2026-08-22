@@ -835,53 +835,13 @@ body.reading{
 }
 .pn.next{ text-align:right }
 
-/* ---------------- SVETILEC 00 ----------------
-   The layer sits at z-index 0 and every section at z-index 1, so the rig can
-   never cover content — it passes behind painted things like a vehicle behind
-   a building. clip-path keeps it out of the sticky nav's strip. */
+/* ---------------- THE PAINTING ORDER ----------------
+   Every section sits at z-index 1 so the fixed decorative layer behind them
+   (.sky) can never cover content. This one rule is what makes that structural
+   rather than a matter of luck — do not remove it with any layer it serves.
+   It outlived SVETILEC 00, the maintenance rig that used to fly the empty
+   bands at z-index 0; the rig was removed for not fitting the page. */
 main section, .hud, footer.outro{ position:relative; z-index:1 }
-.rig-layer{
-  position:fixed; inset:0; z-index:0;
-  pointer-events:none; contain:strict; overflow:hidden;
-  clip-path:inset(48px 0 0 0);
-}
-.rig{
-  position:absolute; top:0; left:0;
-  opacity:0; transition:opacity 700ms ease;
-  will-change:transform;
-}
-.rig-body{
-  position:relative; width:100%; height:100%;
-  background-repeat:no-repeat;
-  background-size:400% 100%;
-  filter:saturate(.85);
-}
-.rig-beacon{                     /* sits over the beacon painted in the sprite */
-  position:absolute; left:60%; top:14%;
-  width:18%; height:18%; border-radius:50%;
-  background:radial-gradient(circle, var(--magenta), transparent 70%);
-  opacity:.25; pointer-events:none;
-}
-.rig-under{
-  position:absolute; left:16%; right:16%; bottom:14%;
-  height:24%; border-radius:50%;
-  background:radial-gradient(ellipse, rgba(157,190,242,.45), transparent 72%);
-  filter:blur(4px); pointer-events:none;
-}
-.rig-cone{
-  position:absolute; right:2%; top:62%;
-  width:46%; height:110%;
-  background:linear-gradient(190deg, rgba(157,190,242,.22), transparent 68%);
-  filter:blur(3px); mix-blend-mode:screen;
-  opacity:0; transition:opacity 700ms ease; pointer-events:none;
-}
-/* the rig has nowhere safe to fly on a short screen, so it stays away */
-@media (max-width:640px){ .rig-layer{ display:none } }
-@media (prefers-reduced-motion: reduce){
-  .rig{ transition:none }
-  .rig-beacon, .rig-cone, .rig-under{ display:none }
-}
-
 
 /* ---------------- THE CITY CONTINUES ----------------
    The same world as the hero, seen from much higher above it. Four planes of a
@@ -892,9 +852,8 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
    The rules this layer obeys:
      - it is the first painted thing on the page, and header.hero is opaque and
        comes AFTER it in the DOM, so the hero never sees it;
-     - z-index 0 like .rig-layer, so `main section, .hud, footer.outro` at
-       z-index 1 always cover it. svetilec.js appends its layer last, so the rig
-       flies in FRONT of the city, never inside it;
+     - z-index 0, so `main section, .hud, footer.outro` at z-index 1 always
+       cover it;
      - every colour is an alpha stop. Element opacity is reserved for the one
        global dimmer, so the composited brightness of any pixel is readable
        straight off this stylesheet and can be checked against a number;
@@ -911,10 +870,9 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
    stack that can physically coincide is two beam cores at 4.64:1. If you add or
    brighten anything here, re-measure. --sky-gain scales the whole layer.
 
-   Unlike .rig-layer this does NOT clip 48px off the top: the rig is a bright
-   discrete object that looked wrong through the sticky nav, whereas a hard
-   horizontal cut across a diffuse field is more visible than the field itself.
-   The nav is 90% opaque ink anyway.
+   This deliberately does NOT clip 48px off the top the way the old rig layer
+   did: a hard horizontal cut across a diffuse field is more visible than the
+   field itself, and the sticky nav is 90% opaque ink anyway.
    -------------------------------------------------- */
 .sky{
   position:fixed; inset:0; z-index:0;
@@ -1058,8 +1016,7 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
    gradients behind a mask, and .sky-beams is three conic rasters behind
    another. .sky-grain stays — it is a single cheap gradient and it is the
    texture. (This rule used to drop beams and grain, which was half wrong: it
-   kept the most expensive plane and dropped the cheapest.) The rig is already
-   display:none below 640px for its own reasons. */
+   kept the most expensive plane and dropped the cheapest.) */
 @media (max-width:640px){ .sky > i.sky-stars, .sky > i.sky-beams{ display:none } }
 /* free, and honours the Save-Data ethic the JS layers already keep */
 @media (prefers-reduced-data: reduce){ .sky{ display:none } }
@@ -1340,7 +1297,12 @@ html[data-static] .sky, html[data-static] .sky > i{ animation:none }
    opposite, and the interest has to come from stillness: a halo that swells
    with the breath, and motes that drift up out of him like a thought forming. */
 
-.zenko{ width:126px; height:126px }                /* seated on the rule */
+/* A seated figure fills a square cell far more than a standing one, so this
+   box being SMALLER than .kensei's 138px did not stop him reading as the
+   biggest of the four. Everything inside is now expressed against --zs, so
+   resizing him is one number and the halo and motes cannot drift out of scale
+   again. */
+.zenko{ --zs:88px; width:var(--zs); height:var(--zs) }   /* seated on the rule */
 
 .zenko-body{
   position:absolute; inset:0; z-index:1;
@@ -1348,13 +1310,13 @@ html[data-static] .sky, html[data-static] .sky > i{ animation:none }
   background-repeat:no-repeat;
   background-size:300% 100%;
   background-position:0 0;
-  filter:drop-shadow(0 0 14px rgba(157,190,242,.22));
+  filter:drop-shadow(0 0 calc(var(--zs) * .11) rgba(157,190,242,.22));
 }
 
 /* the halo breathes with him */
 .zenko-halo{
   position:absolute; left:50%; top:52%;
-  width:112px; height:112px; margin:-56px 0 0 -56px;
+  width:89%; height:89%; margin:-44.5% 0 0 -44.5%;   /* % margins resolve on --zs */
   border-radius:50%;
   background:radial-gradient(circle,
     color-mix(in srgb, var(--beam) 26%, transparent) 0%,
@@ -1366,14 +1328,14 @@ html[data-static] .sky, html[data-static] .sky > i{ animation:none }
 .zenko-motes{ position:absolute; inset:0 }
 .zenko-motes i{
   position:absolute; bottom:34%;
-  width:4px; height:4px; border-radius:50%;
+  width:3.4%; height:3.4%; border-radius:50%;
   background:color-mix(in srgb, var(--cyan) 70%, white);
-  box-shadow:0 0 8px color-mix(in srgb, var(--beam) 85%, transparent);
+  box-shadow:0 0 calc(var(--zs) * .07) color-mix(in srgb, var(--beam) 85%, transparent);
   opacity:0;
 }
-.zenko-motes i:nth-child(1){ left:34%; --mx:-12px; --md:0s }
-.zenko-motes i:nth-child(2){ left:48%; --mx:  5px; --md:.5s }
-.zenko-motes i:nth-child(3){ left:60%; --mx: 14px; --md:1s }
+.zenko-motes i:nth-child(1){ left:34%; --mx:calc(var(--zs) * -.095); --md:0s }
+.zenko-motes i:nth-child(2){ left:48%; --mx:calc(var(--zs) *  .040); --md:.5s }
+.zenko-motes i:nth-child(3){ left:60%; --mx:calc(var(--zs) *  .111); --md:1s }
 
 @media (prefers-reduced-motion: no-preference){
   /* One breath every 18s, and he is perfectly still for the other fourteen.
@@ -1400,7 +1362,7 @@ html[data-static] .sky, html[data-static] .sky > i{ animation:none }
   @keyframes zenko-mote{
     0%,  84%  { opacity:0;   transform:translate3d(0,0,0) scale(.6) }
     87%       { opacity:.85 }
-    100%      { opacity:0;   transform:translate3d(var(--mx),-74px,0) scale(1.1) }
+    100%      { opacity:0;   transform:translate3d(var(--mx), calc(var(--zs) * -.59), 0) scale(1.1) }
   }
 }
 @media (prefers-reduced-motion: reduce){
