@@ -883,6 +883,200 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
 }
 
 
+/* ---------------- THE CITY CONTINUES ----------------
+   The same world as the hero, seen from much higher above it. Four planes of a
+   far city on one fixed layer, each drifting up at its own rate as the page
+   scrolls, so descending the page reads as descending toward the city. The
+   nearest plane starts below the fold and only arrives by the footer.
+
+   The rules this layer obeys:
+     - it is the first painted thing on the page, and header.hero is opaque and
+       comes AFTER it in the DOM, so the hero never sees it;
+     - z-index 0 like .rig-layer, so `main section, .hud, footer.outro` at
+       z-index 1 always cover it. svetilec.js appends its layer last, so the rig
+       flies in FRONT of the city, never inside it;
+     - every colour is an alpha stop. Element opacity is reserved for the one
+       global dimmer, so the composited brightness of any pixel is readable
+       straight off this stylesheet and can be checked against a number;
+     - no filter, no blur, no mix-blend-mode, no image file. A full-viewport
+       blur() is the one thing here that would actually cost frames, and the
+       hero already pays for one. A url() background would also make this a
+       full-viewport LCP candidate and could steal LCP from poster.webp;
+     - nothing moves unless the page is scrolling. No timer, no rAF.
+
+   THE ONE NUMBER: --dim on --ink is 5.18:1 and AA needs 4.50, so this layer has
+   0.68 of contrast headroom, and since `main section` has no background this
+   layer IS the background of that text. No pixel of .sky may exceed relative
+   luminance L = 0.0105. Every alpha below is picked against that; the worst
+   stack that can physically coincide is two beam cores at 4.64:1. If you add or
+   brighten anything here, re-measure. --sky-gain scales the whole layer.
+
+   Unlike .rig-layer this does NOT clip 48px off the top: the rig is a bright
+   discrete object that looked wrong through the sticky nav, whereas a hard
+   horizontal cut across a diffuse field is more visible than the field itself.
+   The nav is 90% opaque ink anyway.
+   -------------------------------------------------- */
+.sky{
+  position:fixed; inset:0; z-index:0;
+  pointer-events:none; contain:strict; overflow:hidden;
+
+  --sky-gain:1;                          /* the one global dimmer */
+  --twr: 62,44,86;                       /* tower body: a lifted violet, kin to --edge */
+  --hz:  232,135,58;                     /* --sodium — the smog burning under the city */
+  --bm:  157,190,242;                    /* --beam   — the searchlights */
+  --st:  220,210,230;                    /* --text   — the stars */
+
+  /* the sodium ground glow is ATMOSPHERE, not an object: it never parallaxes */
+  background-image:radial-gradient(140% 62% at 50% 116%,
+    rgba(var(--hz),.070), rgba(var(--hz),.026) 38%, transparent 70%);
+  opacity:var(--sky-gain);
+}
+/* NB the child selector is (0,1,1) — MORE specific than a bare `.sky-stars`
+   (0,1,0). Anything below that needs to override `display` or
+   `background-repeat` must therefore be written `.sky > i.sky-x`, or it
+   silently loses. This stylesheet has been bitten by exactly that once before
+   (see the `.reveal` note). */
+.sky > i{ position:absolute; display:block; background-repeat:no-repeat }
+
+/* --- 1. star dust — 8vh. Functionally motionless, and that is the point:
+       it is the reference the other three planes are measured against. --- */
+.sky > i.sky-stars{
+  inset:-14% -4% -10vh;
+  background-repeat:repeat;                /* must out-specify `.sky > i` */
+  background-size:760px 620px;
+  background-image:
+    radial-gradient(1.6px 1.6px at  8% 12%, rgba(var(--st),.050), transparent),
+    radial-gradient(1.6px 1.6px at 63% 27%, rgba(var(--st),.050), transparent),
+    radial-gradient(1.5px 1.5px at 31%  6%, rgba(var(--bm),.048), transparent),
+    radial-gradient(1.4px 1.4px at 17% 44%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.4px 1.4px at 41% 19%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.4px 1.4px at 72%  9%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.4px 1.4px at 88% 33%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.4px 1.4px at 54% 52%, rgba(var(--bm),.034), transparent),
+    radial-gradient(1.4px 1.4px at 25% 61%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.4px 1.4px at 79% 58%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.4px 1.4px at 47% 35%, rgba(var(--st),.034), transparent),
+    radial-gradient(1.1px 1.1px at  5% 71%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 13% 28%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 22% 88%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 35% 77%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 44% 71%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 51% 14%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 58% 83%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 66% 66%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 69% 41%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 76% 24%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 83% 79%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 91% 55%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 95% 17%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 38% 47%, rgba(var(--st),.020), transparent),
+    radial-gradient(1.1px 1.1px at 60%  4%, rgba(var(--st),.020), transparent);
+  -webkit-mask-image:linear-gradient(180deg,#000 0 34%,rgba(0,0,0,.45) 60%,transparent 82%);
+          mask-image:linear-gradient(180deg,#000 0 34%,rgba(0,0,0,.45) 60%,transparent 82%);
+  translate:0 -8vh;                      /* the arrived state; the animation runs INTO this */
+}
+
+/* --- 2. the far skyline — 18vh. Seven bands on PRIME periods, so the composite
+       silhouette repeats every ~1.1e16 px and can never be seen to tile.
+       Shorter band = farther = fainter, which is atmospheric perspective. --- */
+.sky-far{
+  left:-6%; right:-6%; bottom:-18vh; height:64vh;
+  background-position:left bottom;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(var(--twr),.038) 0  2px, transparent  2px 419px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.088) 0 46px, transparent 46px 563px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.105) 0 40px, transparent 40px 307px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.082) 0 34px, transparent 34px 211px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.062) 0 28px, transparent 28px 137px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.044) 0 22px, transparent 22px  89px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.036) 0 18px, transparent 18px  61px);
+  background-size:100% 214px, 100% 190px, 100% 166px, 100% 128px, 100% 94px, 100% 62px, 100% 48px;
+  translate:0 -18vh;
+}
+
+/* --- 3. searchlights — 30vh. A DIVERGENT fan: leftmost most vertical (4deg
+       off), rightmost most tilted (33deg), at uneven spacings. Beams that
+       converge draw a triangle, and a triangle is a shape — the one thing this
+       layer must never put on screen. Fanning also means two cores can never
+       cross, so the contrast worst case is a single beam. --- */
+.sky-beams{
+  left:0; right:0; bottom:-30vh; height:118vh;
+  background-size:100% 100%;
+  background-image:
+    conic-gradient(from 359deg at 14% 104%, transparent 0 2deg, rgba(var(--bm),.048) 5deg, transparent  9deg 360deg),
+    conic-gradient(from  16deg at 45% 106%, transparent 0 2deg, rgba(var(--bm),.036) 5deg, transparent 10deg 360deg),
+    conic-gradient(from  28deg at 76% 105%, transparent 0 1deg, rgba(var(--hz),.032) 4deg, transparent  8deg 360deg);
+  /* dark at the apex — the shaft is hidden by the buildings it rises from.
+     This is also what keeps the brightest beam pixel off the glow's peak. */
+  -webkit-mask-image:linear-gradient(0deg,transparent 0 18%,rgba(0,0,0,.55) 32%,#000 46%,transparent 88%);
+          mask-image:linear-gradient(0deg,transparent 0 18%,rgba(0,0,0,.55) 32%,#000 46%,transparent 88%);
+  translate:0 -30vh;
+}
+
+/* --- 4. the near rooftops — 44vh. Painted in INK: the plane with the most
+       travel and the largest features can only ever SUBTRACT light, so it
+       carries zero contrast risk by construction. --- */
+.sky-near{
+  left:-4%; right:-4%; bottom:-44vh; height:74vh;
+  background-position:left bottom;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(10,7,16,.62) 0 58px, transparent 58px 271px),
+    repeating-linear-gradient(90deg, rgba(10,7,16,.48) 0 44px, transparent 44px 163px);
+  background-size:100% 112px, 100% 74px;
+  translate:0 -44vh;
+}
+
+/* --- 5. the hero's own scanline, verbatim. It dithers the conic gradients and
+       ties this layer to the video. It does not move. --- */
+.sky-grain{
+  inset:0;
+  background-image:repeating-linear-gradient(to bottom,
+    rgba(0,0,0,.16) 0 1px, transparent 2px 4px);
+}
+
+/* three of the five planes carry a mask or a conic raster; a phone need not pay
+   for them, and the rig is already display:none below 640px */
+@media (max-width:640px){ .sky > i.sky-beams, .sky > i.sky-grain{ display:none } }
+/* free, and honours the Save-Data ethic the JS layers already keep */
+@media (prefers-reduced-data: reduce){ .sky{ display:none } }
+
+/* ---- the descent. Same construction as the shelf's scroll animation.
+   Everything above is already the 100% frame, so a browser without
+   scroll-driven animations — and every reduced-motion visitor — gets the
+   COMPOSED city rather than a stripped one. One set of numbers, two consumers,
+   structurally impossible to let them drift apart. That is also why there is no
+   `prefers-reduced-motion: reduce` block here. ---- */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference){
+    .sky{
+      /* NB: no `opacity:0` here. animation-fill-mode:both already holds the
+         `from` frame before the range starts, so declaring it would be
+         redundant — and it would be the one way this layer could go
+         permanently invisible if the timeline ever failed to attach. Left
+         undeclared, an unresolved timeline falls back to var(--sky-gain). */
+      animation:sky-in linear both;
+      animation-timeline:scroll(root block);
+      animation-range:4vh 26vh;          /* clear of the hero before it says anything */
+    }
+    .sky > i{
+      animation-timing-function:linear;
+      animation-fill-mode:both;
+      animation-timeline:scroll(root block);   /* whole document, default range */
+    }
+    .sky-stars{ animation-name:sky-p8  }
+    .sky-far  { animation-name:sky-p18 }
+    .sky-beams{ animation-name:sky-p30 }
+    .sky-near { animation-name:sky-p44 }
+  }
+}
+@keyframes sky-in { from{ opacity:0 } to{ opacity:var(--sky-gain) } }
+@keyframes sky-p8 { from{ translate:0 0 } to{ translate:0  -8vh } }
+@keyframes sky-p18{ from{ translate:0 0 } to{ translate:0 -18vh } }
+@keyframes sky-p30{ from{ translate:0 0 } to{ translate:0 -30vh } }
+@keyframes sky-p44{ from{ translate:0 0 } to{ translate:0 -44vh } }
+
+
+
 /* ---------------- SECTION HEADS ----------------
    Eyebrow and heading sit in ordinary flow and keep their ordinary spacing.
    The character is absolutely positioned against a shrink-wrapped title, so
@@ -1137,7 +1331,7 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   background:radial-gradient(circle,
     color-mix(in srgb, var(--beam) 26%, transparent) 0%,
     transparent 68%);
-  opacity:.5;
+  opacity:.34;                                     /* the resting value; see below */
 }
 
 /* motes rise out of him, slowly, never in a hurry */
@@ -1149,31 +1343,36 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   box-shadow:0 0 8px color-mix(in srgb, var(--beam) 85%, transparent);
   opacity:0;
 }
-.zenko-motes i:nth-child(1){ left:32%; --mx:-14px; --md:0s }
-.zenko-motes i:nth-child(2){ left:44%; --mx:  6px; --md:1.6s }
-.zenko-motes i:nth-child(3){ left:56%; --mx: 16px; --md:3.1s }
-.zenko-motes i:nth-child(4){ left:38%; --mx: -6px; --md:4.7s }
-.zenko-motes i:nth-child(5){ left:62%; --mx: 12px; --md:6.2s }
+.zenko-motes i:nth-child(1){ left:34%; --mx:-12px; --md:0s }
+.zenko-motes i:nth-child(2){ left:48%; --mx:  5px; --md:.5s }
+.zenko-motes i:nth-child(3){ left:60%; --mx: 14px; --md:1s }
 
 @media (prefers-reduced-motion: no-preference){
-  /* one slow breath every 8s — rest, in, out */
-  .zenko-body{ animation:zenko-breath 8s steps(1, end) infinite }
+  /* One breath every 18s, and he is perfectly still for the other fourteen.
+     The three characters either side of him move for 16–28% of their cycle;
+     an always-breathing halo and a continuous stream of motes put him at 100%,
+     which read as fidgeting rather than meditating. Everything below is timed
+     off the same 18s clock so the halo swells and the motes leave only while
+     he is actually breathing. */
+  .zenko-body{ animation:zenko-breath 18s steps(1, end) infinite }
   @keyframes zenko-breath{
-    0%,  34%  { background-position:0 0 }
-    36%, 58%  { background-position:50% 0 }
-    60%, 92%  { background-position:100% 0 }
-    94%, 100% { background-position:0 0 }
+    0%,  76%  { background-position:0 0 }      /* ~13.7s of nothing at all */
+    77%, 84%  { background-position:50% 0 }    /* in  */
+    85%, 94%  { background-position:100% 0 }   /* out */
+    95%, 100% { background-position:0 0 }      /* settle */
   }
-  .zenko-halo{ animation:zenko-halo 8s ease-in-out infinite }
+  .zenko-halo{ animation:zenko-halo 18s ease-in-out infinite }
   @keyframes zenko-halo{
-    0%,100%{ opacity:.4;  transform:scale(.92) }
-    52%    { opacity:.78; transform:scale(1.08) }
+    0%,  76%  { opacity:.34; transform:scale(1) }
+    86%       { opacity:.62; transform:scale(1.06) }
+    96%, 100% { opacity:.34; transform:scale(1) }
   }
-  .zenko-motes i{ animation:zenko-mote 8s ease-out infinite; animation-delay:var(--md) }
+  /* the motes are the exhale leaving him, not an ambient effect */
+  .zenko-motes i{ animation:zenko-mote 18s ease-out infinite; animation-delay:var(--md) }
   @keyframes zenko-mote{
-    0%       { opacity:0;   transform:translate3d(0,0,0) scale(.6) }
-    12%      { opacity:.9 }
-    100%     { opacity:0;   transform:translate3d(var(--mx),-74px,0) scale(1.1) }
+    0%,  84%  { opacity:0;   transform:translate3d(0,0,0) scale(.6) }
+    87%       { opacity:.85 }
+    100%      { opacity:0;   transform:translate3d(var(--mx),-74px,0) scale(1.1) }
   }
 }
 @media (prefers-reduced-motion: reduce){

@@ -48,12 +48,21 @@ rule. Same construction every time — one sprite sheet, poses cycled by CSS
 `tools/import-*.py` onto a shared baseline so the figure never hops when the
 pose changes.
 
-| Section | Who | What he does | Every |
-| --- | --- | --- | --- |
-| Writing | meditator | breathes; a halo swells and motes drift up | 8s |
-| Projects | swordsman | draws, cuts, sheathes — a blade arc trails the cut | 20s |
-| Music | busker | plays four bars; rings widen out of the guitar | 18s |
-| Books | ronin | smokes a pipe | 15s |
+| Section | Who | What he does | Every | Moving |
+| --- | --- | --- | --- | --- |
+| Writing | meditator | takes one breath; the halo swells and three motes leave on the exhale | 18s | 17% |
+| Projects | swordsman | draws, cuts, sheathes — a blade arc trails the cut | 20s | 19% |
+| Music | busker | plays four bars; rings widen out of the guitar | 18s | 16% |
+| Books | ronin | smokes a pipe | 15s | 28% |
+
+**The last column is the point.** These are characters who are mostly still and
+occasionally move, not characters who fidget. The meditator originally ran a
+continuously pulsing halo and a mote every 1.6s on an 8s cycle — a 100% duty
+cycle, four to six times his siblings — and read as distracting rather than
+calm. Everything he does is now timed off one 18s clock so the halo swells and
+the motes leave *only* while he is actually breathing. If you add a fifth
+character, keep it inside the 15-30% band; you can measure it by sampling
+`getComputedStyle` across one cycle with `tools/probe.mjs`.
 
 The characters are absolutely positioned against a shrink-wrapped title that
 contains **both** the eyebrow and the heading. Two reasons, both learned the
@@ -114,6 +123,95 @@ Three things keep it from ever being a nuisance:
 Under `prefers-reduced-motion` it is one parked still with no timers at all,
 and `?static=1` never constructs it or fetches the sprite. The sprite itself
 is only fetched when the first crossing begins, so it costs nothing at load.
+
+## The city continues
+
+Below the fold the page used to be flat black. `.sky` is a fixed layer behind
+everything that continues the hero's world — the same city, seen from much
+higher above it — as five planes that drift up at different rates while you
+scroll:
+
+| Plane | What it is | Travel | px per screenful @1280x800 |
+| --- | --- | --- | --- |
+| `.sky-stars` | 26 points on a 760x620 tile | 8vh | 7 |
+| `.sky-far` | seven tower bands on prime periods | 18vh | 17 |
+| `.sky-beams` | three searchlights | 30vh | 27 |
+| `.sky-near` | near rooftops, painted in ink | 44vh | 40 |
+| `.sky-grain` | the hero's scanline, static | 0 | 0 |
+
+The ratios are 1 : 2.25 : 3.75 : 5.5. Each plane is anchored
+`bottom: -(its own travel)`, so at the top of the page the far skyline is a
+hint at the bottom edge and the near rooftops are entirely off-screen; by the
+footer the city has risen into frame. Scrolling down reads as descending
+toward it.
+
+**No JavaScript, no timer, no rAF, no image file.** It is driven entirely by
+`animation-timeline: scroll(root block)`, the same construction as the shelf.
+The site already runs one perpetual 60fps callback for SVETILEC and a second
+one was not affordable. A welcome consequence: nothing moves while the page is
+idle.
+
+### The one number
+
+`--dim` (#8B7C99) on `--ink` (#0A0710) is 5.18:1, and AA needs 4.50 — so this
+layer has **0.68 of contrast headroom**. Since `main section` has no
+background, *the sky is the background of that body text*. Solving for where
+`--dim` hits 4.50 gives a hard ceiling:
+
+> **No pixel of `.sky` may exceed relative luminance L = 0.0105.**
+
+Every alpha in the block is picked against it. Measured on the isolated layer:
+max L 0.00852, worst text contrast 4.65:1, median = plain ink. Two structural
+properties rather than luck hold that line: the beam mask is transparent
+across its bottom 18% (the shaft is hidden by the buildings it rises from), so
+the brightest beam pixel can never land on the brightest glow pixel; and the
+nearest, largest, fastest plane is painted in `rgba(10,7,16,...)`, so it can
+only ever *subtract* light. **If you add or brighten anything here,
+re-measure** — isolate the layer with `tools/shot.mjs` and convert to relative
+luminance. `--sky-gain` scales the whole layer, animation included, from one
+place.
+
+### Measuring this layer: use a real GPU
+
+`tools/probe.mjs` and `tools/shot.mjs` both force
+`--use-angle=swiftshader`, and so does every local Lighthouse run. Software
+rendering turns a full-viewport composited layer into CPU work, which makes
+this block look expensive when it is not. Measured over a scripted scroll:
+
+| | median frame | 
+| --- | --- |
+| swiftshader, no sky | 16.7 ms |
+| swiftshader, five planes | 31.0 ms |
+| **hardware GPU, no sky** | **16.6 ms** |
+| **hardware GPU, five planes** | **16.7 ms** |
+
+On a real GPU the layer is rastered once and thereafter only translated, so it
+costs nothing — both runs sit on the 60fps vsync line. Local Lighthouse
+perf scores swing 74-93 on the *unmodified* site for the same reason; don't
+read a few points either way as signal. Drop the swiftshader flags when you
+need a true frame-cost number.
+
+### Two traps this block has already stepped in
+
+- **`.sky > i` is (0,1,1) and out-specifies a bare `.sky-stars` (0,1,0).**
+  Overrides of `display` or `background-repeat` must be written
+  `.sky > i.sky-x` or they silently lose. This cost a non-tiling star field
+  and a mobile media query that did nothing.
+- **Never declare `opacity:0` on `.sky` inside the `@supports` block.**
+  `animation-fill-mode: both` already holds the `from` frame, and the
+  declaration would be the one way the layer could go permanently invisible if
+  the timeline failed to attach.
+
+Everything outside `@supports` **is** the 100% frame, so a reduced-motion
+visitor and every Firefox visitor (Gecko still ships
+`animation-timeline: scroll()` in preview only) sees the *composed* city
+rather than a stripped one — verified with Chrome's
+`--force-prefers-reduced-motion`. That is also why this block has no
+`prefers-reduced-motion: reduce` rules: one set of numbers serves both the
+animated end state and the fallback, so they cannot drift apart. Unlike
+`.rig-layer` it does **not** clip 48px off the top; the rig is a bright
+discrete object that looked wrong through the sticky nav, whereas a hard
+horizontal cut across a diffuse field is more visible than the field itself.
 
 ## Running locally
 
