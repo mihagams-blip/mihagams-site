@@ -1038,3 +1038,86 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   .fcard-btn.is-playing .fc-sheen{ animation:none; opacity:.35 }
   .fcard-btn.is-playing .fc-eq i{ animation:none; height:62% }
 }
+
+/* ---------------- THE BUSKER ----------------
+   Kin to the ronin on the shelf: he stands on the Music heading's rule and
+   every so often plays a few bars, and the sound leaves rings behind. Same
+   construction — three poses in one sheet cycled by steps(), no GIF. */
+.music-head{ margin-bottom:40px }
+.music-title{
+  position:relative;
+  display:flex; align-items:flex-end; gap:16px;
+  flex-wrap:wrap;
+}
+.music-title .eyebrow{ flex-basis:100%; margin-bottom:10px }
+.music-title h2{ margin:0 }
+.music-title::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg,
+    var(--magenta) 0%,
+    color-mix(in srgb, var(--magenta) 40%, transparent) 44%,
+    transparent 92%);
+}
+
+.busker{
+  position:relative;
+  width:132px; height:132px;
+  margin-bottom:-4px;          /* he stands ON the rule, not over it */
+  flex:0 0 auto; pointer-events:none; z-index:1;
+}
+@media (max-width:760px){ .busker{ width:100px; height:100px } }
+
+.busker-body{
+  position:absolute; inset:0;
+  background-image:url("assets/busker.webp");
+  background-repeat:no-repeat;
+  background-size:300% 100%;
+  background-position:0 0;
+  filter:drop-shadow(0 0 16px rgba(217,107,168,.18));
+  transform-origin:50% 92%;     /* his feet — the sway pivots from the ground */
+  animation:busker-sway 6s ease-in-out infinite;
+}
+@keyframes busker-sway{
+  0%,100%{ transform:rotate(0deg) }
+  50%    { transform:rotate(.7deg) }
+}
+
+/* sound leaving the guitar: rings that widen and thin out */
+.busker-rings{ position:absolute; inset:0; pointer-events:none }
+.busker-rings i{
+  position:absolute; left:47%; top:50%;    /* the guitar body */
+  width:30px; height:30px; margin:-15px 0 0 -15px;
+  border-radius:50%;
+  border:2.5px solid color-mix(in srgb, var(--magenta) 70%, white);
+  box-shadow:0 0 14px color-mix(in srgb, var(--magenta) 55%, transparent),
+             inset 0 0 10px color-mix(in srgb, var(--magenta) 30%, transparent);
+  opacity:0;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  /* 18s: still for most of it, then four bars and the rings go out */
+  .busker-body{
+    animation:busker-sway 6s ease-in-out infinite,
+              busker-play 18s steps(1, end) infinite;
+  }
+  @keyframes busker-play{
+    0%,  70%  { background-position:0 0 }        /* idle */
+    71%, 74%  { background-position:50% 0 }      /* strum down */
+    75%, 78%  { background-position:100% 0 }     /* lean back */
+    79%, 82%  { background-position:50% 0 }      /* and again */
+    83%, 86%  { background-position:100% 0 }
+    87%,100%  { background-position:0 0 }        /* still again */
+  }
+  .busker-rings i{ animation:busker-ring 18s ease-out infinite }
+  .busker-rings i:nth-child(2){ animation-delay:.9s }
+  .busker-rings i:nth-child(3){ animation-delay:1.8s }
+  @keyframes busker-ring{
+    0%,  70%  { opacity:0;   transform:scale(.35) }
+    72%       { opacity:.85 }
+    86%, 100% { opacity:0;   transform:scale(4.2) }
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .busker-body{ animation:none; background-position:0 0 }
+  .busker-rings{ display:none }
+}

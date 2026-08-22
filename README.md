@@ -38,6 +38,19 @@ files. Node is not required to run or deploy.
 | `python3 tools/make-dust.py` | Regenerates `assets/dust.webp`, the shelf's dust-puff mask. |
 | `python3 tools/import-rig.py <sheet.png>` | Normalises a generated SVETILEC sprite sheet into `assets/svetilec.webp` — four identical square cells at one shared scale, so the rig never jumps when it swaps pose. |
 | `python3 tools/import-ronin.py <sheet.png>` | Same for the ronin's three poses, but aligned on their BOTTOM edge — his dangling foot is the anchor the eye tracks, so centring would make him twitch. |
+| `python3 tools/import-busker.py <sheet.png>` | The same again for the guitarist on the Music heading. |
+
+## The busker on the soundtrack
+
+A second ronin stands on the Music heading's rule with a guitar. Every 18
+seconds he plays four bars — the pose alternates strum-down / lean-back twice
+— and three concentric rings widen out of the guitar and fade, the sound
+leaving the instrument.
+
+Same construction as the shelf ronin: three poses in one sheet, cycled by CSS
+`steps()`, normalised by `tools/import-busker.py` onto a shared bottom line so
+his sandals stay planted between poses. Under `prefers-reduced-motion` he is a
+single still frame and the rings never render.
 
 ## The ronin on the shelf
 
