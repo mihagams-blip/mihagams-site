@@ -881,3 +881,75 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   .rig{ transition:none }
   .rig-beacon, .rig-cone, .rig-under{ display:none }
 }
+
+/* ---------------- THE RONIN ON THE SHELF ----------------
+   He sits on the Books heading as if it were a ledge, near leg bent, far leg
+   hanging over the edge. Three poses in one sheet — idle, draw, exhale —
+   cycled on a long timer rather than a GIF, so the rhythm is tunable and the
+   whole thing can be switched off for reduced motion. */
+.books-head{ position:relative; padding-right:190px }
+@media (max-width:760px){ .books-head{ padding-right:0 } }
+
+.ronin{
+  position:absolute; right:0; bottom:-6px;
+  width:170px; height:170px;
+  pointer-events:none;
+}
+.ronin-body{
+  position:absolute; inset:0;
+  background-image:url("assets/ronin.webp");
+  background-repeat:no-repeat;
+  background-size:300% 100%;          /* three cells */
+  background-position:0 0;
+  filter:drop-shadow(0 0 18px rgba(157,190,242,.18));
+  transform-origin:52% 42%;            /* roughly his hips, so the sway reads
+                                          as the dangling leg swinging */
+  animation:ronin-breathe 5.5s ease-in-out infinite;
+}
+@keyframes ronin-breathe{
+  0%,100%{ transform:rotate(0deg) translateY(0) }
+  50%    { transform:rotate(.5deg) translateY(1.5px) }
+}
+
+/* smoke: the shelf's own dust texture, tinted and rising from the pipe */
+.ronin-smoke{ position:absolute; inset:0; pointer-events:none }
+.ronin-smoke i{
+  position:absolute; left:34%; top:34%;
+  width:56px; height:56px; opacity:0;
+  background:radial-gradient(circle at 45% 45%,
+    rgba(220,210,230,.85) 0%, rgba(157,190,242,.4) 45%, transparent 78%);
+  -webkit-mask-image:url("assets/dust.webp"); mask-image:url("assets/dust.webp");
+  -webkit-mask-size:200% 200%; mask-size:200% 200%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  filter:blur(1px);
+}
+.ronin-smoke i:nth-child(1){ -webkit-mask-position:0 0;    mask-position:0 0;    --dx:-16px; --rot:-24deg }
+.ronin-smoke i:nth-child(2){ -webkit-mask-position:100% 0; mask-position:100% 0; --dx:-30px; --rot: 18deg }
+.ronin-smoke i:nth-child(3){ -webkit-mask-position:0 100%; mask-position:0 100%; --dx:-44px; --rot:-12deg }
+
+@media (prefers-reduced-motion: no-preference){
+  /* one cycle every 15s: idle -> draw -> exhale -> idle */
+  .ronin-body{
+    animation:ronin-breathe 5.5s ease-in-out infinite,
+              ronin-poses 15s steps(1, end) infinite;
+  }
+  @keyframes ronin-poses{
+    0%,   62%  { background-position:0 0 }        /* idle */
+    64%,  74%  { background-position:50% 0 }      /* pipe to the mask */
+    76%,  90%  { background-position:100% 0 }     /* head back, exhaling */
+    92%,  100% { background-position:0 0 }        /* idle again */
+  }
+  .ronin-smoke i{ animation:ronin-puff 15s ease-out infinite }
+  .ronin-smoke i:nth-child(2){ animation-delay:.35s }
+  .ronin-smoke i:nth-child(3){ animation-delay:.7s }
+  @keyframes ronin-puff{
+    0%,  76%  { opacity:0; transform:translate3d(0,0,0) rotate(0) scale(.3) }
+    80%       { opacity:.55 }
+    92%, 100% { opacity:0; transform:translate3d(var(--dx),-58px,0)
+                                     rotate(var(--rot)) scale(1.9) }
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .ronin-body{ animation:none; background-position:0 0 }
+  .ronin-smoke{ display:none }
+}
