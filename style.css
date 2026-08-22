@@ -882,40 +882,51 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   .rig-beacon, .rig-cone, .rig-under{ display:none }
 }
 
+
+/* ---------------- SECTION HEADS ----------------
+   Eyebrow and heading sit in ordinary flow and keep their ordinary spacing.
+   The character is absolutely positioned against a shrink-wrapped title, so
+   however tall it is drawn it cannot push the heading away from its eyebrow —
+   it just overhangs upward into empty space. The rule under the heading runs
+   the full width and is the ledge each character stands or sits on. */
+.sec-head{ position:relative; margin-bottom:40px }
+.sec-head::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg,
+    var(--rule, var(--beam)) 0%,
+    color-mix(in srgb, var(--rule, var(--beam)) 40%, transparent) 44%,
+    transparent 92%);
+}
+.sec-title{ position:relative; display:inline-block; max-width:100% }
+.sec-title h2{ margin:0 }
+/* the eyebrow lives inside the shrink-wrapped title too, so the box is as
+   wide as the WIDER of the two lines — otherwise a long eyebrow like
+   "03 / THE SOUNDTRACK" runs out from under the heading and the character,
+   anchored to the heading alone, sits on top of its last letters */
+.sec-title .eyebrow{ margin-bottom:14px }
+.sec-char{
+  position:absolute; left:calc(100% + 16px); bottom:0;
+  pointer-events:none; z-index:1;
+}
+/* below this the heading and the eyebrow are close enough to collide, so the
+   characters step aside rather than sit on the words */
+@media (max-width:760px){ .sec-char{ display:none } }
+
+.s-writing .sec-head{ --rule:var(--beam) }
+.s-projects .sec-head{ --rule:var(--beam) }
+.s-music .sec-head{ --rule:var(--magenta) }
+.s-books .sec-head{ --rule:var(--sodium-hi) }
+
 /* ---------------- THE RONIN ON THE SHELF ----------------
    He sits on the Books heading as if it were a ledge, near leg bent, far leg
    hanging over the edge. Three poses in one sheet — idle, draw, exhale —
    cycled on a long timer rather than a GIF, so the rhythm is tunable and the
    whole thing can be switched off for reduced motion. */
-.books-head{ margin-bottom:44px }
 
 /* The heading's underline is his ledge: he sits on it right after the word,
    near leg tucked, far leg hanging over the edge into the space below. */
-.books-title{
-  position:relative;
-  display:flex; align-items:flex-end; gap:14px;
-  padding-bottom:0;
-}
-.books-title::after{
-  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
-  background:linear-gradient(90deg,
-    var(--sodium-hi) 0%,
-    color-mix(in srgb, var(--sodium) 45%, transparent) 42%,
-    transparent 92%);
-}
-.books-title h2{ margin:0 }
 
-.ronin{
-  position:relative;
-  width:124px; height:124px;
-  margin-bottom:-46px;          /* the leg hangs below the ledge */
-  flex:0 0 auto;
-  pointer-events:none;
-  z-index:1;
-}
-@media (max-width:760px){
-  .ronin{ width:96px; height:96px; margin-bottom:-34px }
-}
+.ronin{ width:124px; height:124px; bottom:-46px }   /* the leg hangs over */
 .ronin-body{
   position:absolute; inset:0;
   background-image:url("assets/ronin.webp");
@@ -1043,29 +1054,8 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
    Kin to the ronin on the shelf: he stands on the Music heading's rule and
    every so often plays a few bars, and the sound leaves rings behind. Same
    construction — three poses in one sheet cycled by steps(), no GIF. */
-.music-head{ margin-bottom:40px }
-.music-title{
-  position:relative;
-  display:flex; align-items:flex-end; gap:16px;
-  flex-wrap:wrap;
-}
-.music-title .eyebrow{ flex-basis:100%; margin-bottom:10px }
-.music-title h2{ margin:0 }
-.music-title::after{
-  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
-  background:linear-gradient(90deg,
-    var(--magenta) 0%,
-    color-mix(in srgb, var(--magenta) 40%, transparent) 44%,
-    transparent 92%);
-}
 
-.busker{
-  position:relative;
-  width:132px; height:132px;
-  margin-bottom:-4px;          /* he stands ON the rule, not over it */
-  flex:0 0 auto; pointer-events:none; z-index:1;
-}
-@media (max-width:760px){ .busker{ width:100px; height:100px } }
+.busker{ width:132px; height:132px }               /* stands on the rule */
 
 .busker-body{
   position:absolute; inset:0;
@@ -1120,4 +1110,128 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
 @media (prefers-reduced-motion: reduce){
   .busker-body{ animation:none; background-position:0 0 }
   .busker-rings{ display:none }
+}
+
+/* ---------------- THE MEDITATOR ----------------
+   Third of the three: he sits on the Writing rule and simply breathes. The
+   other two do something you can point at — a puff, a chord. This one is the
+   opposite, and the interest has to come from stillness: a halo that swells
+   with the breath, and motes that drift up out of him like a thought forming. */
+
+.zenko{ width:126px; height:126px }                /* seated on the rule */
+
+.zenko-body{
+  position:absolute; inset:0; z-index:1;
+  background-image:url("assets/zenko.webp");
+  background-repeat:no-repeat;
+  background-size:300% 100%;
+  background-position:0 0;
+  filter:drop-shadow(0 0 14px rgba(157,190,242,.22));
+}
+
+/* the halo breathes with him */
+.zenko-halo{
+  position:absolute; left:50%; top:52%;
+  width:112px; height:112px; margin:-56px 0 0 -56px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    color-mix(in srgb, var(--beam) 26%, transparent) 0%,
+    transparent 68%);
+  opacity:.5;
+}
+
+/* motes rise out of him, slowly, never in a hurry */
+.zenko-motes{ position:absolute; inset:0 }
+.zenko-motes i{
+  position:absolute; bottom:34%;
+  width:4px; height:4px; border-radius:50%;
+  background:color-mix(in srgb, var(--cyan) 70%, white);
+  box-shadow:0 0 8px color-mix(in srgb, var(--beam) 85%, transparent);
+  opacity:0;
+}
+.zenko-motes i:nth-child(1){ left:32%; --mx:-14px; --md:0s }
+.zenko-motes i:nth-child(2){ left:44%; --mx:  6px; --md:1.6s }
+.zenko-motes i:nth-child(3){ left:56%; --mx: 16px; --md:3.1s }
+.zenko-motes i:nth-child(4){ left:38%; --mx: -6px; --md:4.7s }
+.zenko-motes i:nth-child(5){ left:62%; --mx: 12px; --md:6.2s }
+
+@media (prefers-reduced-motion: no-preference){
+  /* one slow breath every 8s — rest, in, out */
+  .zenko-body{ animation:zenko-breath 8s steps(1, end) infinite }
+  @keyframes zenko-breath{
+    0%,  34%  { background-position:0 0 }
+    36%, 58%  { background-position:50% 0 }
+    60%, 92%  { background-position:100% 0 }
+    94%, 100% { background-position:0 0 }
+  }
+  .zenko-halo{ animation:zenko-halo 8s ease-in-out infinite }
+  @keyframes zenko-halo{
+    0%,100%{ opacity:.4;  transform:scale(.92) }
+    52%    { opacity:.78; transform:scale(1.08) }
+  }
+  .zenko-motes i{ animation:zenko-mote 8s ease-out infinite; animation-delay:var(--md) }
+  @keyframes zenko-mote{
+    0%       { opacity:0;   transform:translate3d(0,0,0) scale(.6) }
+    12%      { opacity:.9 }
+    100%     { opacity:0;   transform:translate3d(var(--mx),-74px,0) scale(1.1) }
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .zenko-body{ animation:none; background-position:0 0 }
+  .zenko-halo{ animation:none; opacity:.45 }
+  .zenko-motes{ display:none }
+}
+
+/* ---------------- THE SWORDSMAN ----------------
+   Fourth and last. He stands on the Projects rule and, every so often, draws,
+   cuts and sheathes. Five poses rather than three, and the timing is uneven on
+   purpose: the draw is slow, the cut is two fast frames, the sheathe is
+   unhurried again. Even spacing would read as a flip-book. */
+
+.kensei{ width:138px; height:138px }               /* stands on the rule */
+
+.kensei-body{
+  position:absolute; inset:0; z-index:1;
+  background-image:url("assets/kensei.webp");
+  background-repeat:no-repeat;
+  background-size:500% 100%;         /* five cells */
+  background-position:0 0;
+  filter:drop-shadow(0 0 14px rgba(157,190,242,.2));
+}
+
+/* the cut leaves a blade arc behind it for a few frames */
+.kensei-arc{
+  position:absolute; left:6%; top:8%;
+  width:88%; height:78%;
+  border-radius:50%;
+  border-top:2.5px solid color-mix(in srgb, var(--beam) 75%, white);
+  border-right:2.5px solid color-mix(in srgb, var(--beam) 35%, transparent);
+  border-bottom:2.5px solid transparent;
+  border-left:2.5px solid transparent;
+  filter:drop-shadow(0 0 10px color-mix(in srgb, var(--beam) 80%, transparent));
+  opacity:0;
+  transform:rotate(-28deg);
+}
+
+@media (prefers-reduced-motion: no-preference){
+  /* 20s: still, then draw - cut - follow - sheathe, then still again */
+  .kensei-body{ animation:kensei-cut 20s steps(1, end) infinite }
+  @keyframes kensei-cut{
+    0%,   72%  { background-position:0 0 }        /* idle */
+    73%,  79%  { background-position:25% 0 }      /* draw, slow */
+    80%,  81.5%{ background-position:50% 0 }      /* swing, fast */
+    82%,  84%  { background-position:75% 0 }      /* follow through, fast */
+    85%,  92%  { background-position:100% 0 }     /* sheathe, unhurried */
+    93%, 100%  { background-position:0 0 }        /* idle */
+  }
+  .kensei-arc{ animation:kensei-arc 20s ease-out infinite }
+  @keyframes kensei-arc{
+    0%,  79.5%{ opacity:0;   transform:rotate(-46deg) scale(.82) }
+    81%      { opacity:.85 }
+    88%,100% { opacity:0;    transform:rotate(26deg) scale(1.12) }
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .kensei-body{ animation:none; background-position:0 0 }
+  .kensei-arc{ display:none }
 }

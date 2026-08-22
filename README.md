@@ -40,6 +40,31 @@ files. Node is not required to run or deploy.
 | `python3 tools/import-ronin.py <sheet.png>` | Same for the ronin's three poses, but aligned on their BOTTOM edge — his dangling foot is the anchor the eye tracks, so centring would make him twitch. |
 | `python3 tools/import-busker.py <sheet.png>` | The same again for the guitarist on the Music heading. |
 
+## Four characters on four headings
+
+Each section heading has a rule under it, and a cyberpunk samurai lives on that
+rule. Same construction every time — one sprite sheet, poses cycled by CSS
+`steps()` on a long timer, never a GIF — and each is normalised by its own
+`tools/import-*.py` onto a shared baseline so the figure never hops when the
+pose changes.
+
+| Section | Who | What he does | Every |
+| --- | --- | --- | --- |
+| Writing | meditator | breathes; a halo swells and motes drift up | 8s |
+| Projects | swordsman | draws, cuts, sheathes — a blade arc trails the cut | 20s |
+| Music | busker | plays four bars; rings widen out of the guitar | 18s |
+| Books | ronin | smokes a pipe | 15s |
+
+The characters are absolutely positioned against a shrink-wrapped title that
+contains **both** the eyebrow and the heading. Two reasons, both learned the
+hard way: in normal flow a tall figure inflates the heading's line box and
+pushes the heading away from its eyebrow, and anchored to the heading alone it
+sits on top of a longer eyebrow like "03 / THE SOUNDTRACK".
+
+Every one of them is `aria-hidden`, untabbable, and disabled below 760px, and
+`prefers-reduced-motion` collapses each to a single still frame with no
+timers, no particles and no arcs.
+
 ## The busker on the soundtrack
 
 A second ronin stands on the Music heading's rule with a guitar. Every 18
