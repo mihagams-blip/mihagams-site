@@ -160,9 +160,21 @@ background, *the sky is the background of that body text*. Solving for where
 
 > **No pixel of `.sky` may exceed relative luminance L = 0.0105.**
 
-Every alpha in the block is picked against it. Measured on the isolated layer:
-max L 0.00889, worst text contrast 4.62:1, median = plain ink, and 24% of the
-frame carries visible structure.
+Every alpha in the block is picked against it. Measured on the isolated layer
+across **six viewport widths (375-3440px) x five scroll positions**: worst pixel
+anywhere L 0.00889, worst text contrast 4.62:1, median = plain ink, and 24% of
+the frame carries visible structure.
+
+**Measure the sweep, not one viewport.** An earlier version of this note claimed
+the worst case was "two beam cores crossing" at 1280x800. That was wrong twice
+over. The real worst case is a coincidence of `.sky-far`'s seven tower bands,
+and because the bands repeat in fixed px while the element scales with the
+viewport, a wider screen simply puts more coincidences on screen: 3440x1440
+measured L 0.01080 and a contrast of 4.475:1 — over this ceiling and *under
+AA* — while 1280x800 measured 4.58 and looked fine. A spot-check at one width
+structurally cannot see this. `scratchpad/sweep.mjs` drives the whole sweep in
+one Chrome session using CDP device-metrics emulation, which also gets past the
+~500px minimum window width headless Chrome enforces on macOS.
 
 The first pass came in at max L 0.00852 / 4.65:1 but only 17% structure, and
 Miha could not see it at all on a 15-inch laptop — "barely noticeable" had
@@ -216,6 +228,16 @@ need a true frame-cost number.
   Overrides of `display` or `background-repeat` must be written
   `.sky > i.sky-x` or they silently lose. This cost a non-tiling star field
   and a mobile media query that did nothing.
+- **Prime periods defeat repetition; they say nothing about phase.** All seven
+  `.sky-far` bands originally began their opaque run at x=0, so all seven
+  coincided there by construction — a 0.44 composite. Since `.sky-far` is inset
+  `left:-6%`, that stack cleared the viewport only when `0.06*W >= 46px`, which
+  painted a hard-edged bright stripe welded to the left edge of every screen
+  under 767px wide. The leading `transparent 0 Npx` in each band is the fix, and
+  the offsets (24/90/210/156/106/8/17) were **solved for**: they minimise the
+  worst composite over 3600px of x, bounding the stack at 0.232 by construction
+  instead of by spot-check, and leave no band over x=0 at all. Changing any
+  period, width or offset invalidates that search — re-run it.
 - **Never declare `opacity:0` on `.sky` inside the `@supports` block.**
   `animation-fill-mode: both` already holds the `from` frame, and the
   declaration would be the one way the layer could go permanently invisible if

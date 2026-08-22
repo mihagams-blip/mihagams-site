@@ -978,18 +978,35 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
 
 /* --- 2. the far skyline — 18vh. Seven bands on PRIME periods, so the composite
        silhouette repeats every ~1.1e16 px and can never be seen to tile.
-       Shorter band = farther = fainter, which is atmospheric perspective. --- */
+       Shorter band = farther = fainter, which is atmospheric perspective.
+
+       THE LEADING `transparent 0 Npx` IN EACH BAND IS LOAD-BEARING. Prime
+       periods defeat *repetition*, but they say nothing about *phase*. With
+       every band starting its opaque run at x=0 all seven coincided there by
+       construction — a 0.44 composite. Two consequences, both measured:
+       `.sky-far` is inset left:-6%, so that stack cleared the viewport only
+       when 0.06*W >= 46px, i.e. it painted a hard-edged bright stripe welded
+       to the left edge of every screen under 767px wide; and because primes
+       guarantee every coincidence occurs at *some* x, the peak was bounded by
+       nothing, so wide viewports surfaced higher-order stacks and 3440px
+       measured L=0.01080 — over this block's ceiling and under AA.
+
+       The offsets (24/90/210/156/106/8/17) were solved for, not chosen: they
+       minimise the worst composite over 3600px of x, which bounds the stack at
+       0.232 by construction rather than by spot-check, and put NO band over
+       x=0 at all. Changing any period, width or offset invalidates that
+       search — re-run it before you do. --- */
 .sky-far{
   left:-6%; right:-6%; bottom:-18vh; height:72vh;
   background-position:left bottom;
   background-image:
-    repeating-linear-gradient(90deg, rgba(var(--twr),.046) 0  2px, transparent  2px 419px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.104) 0 46px, transparent 46px 563px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.124) 0 40px, transparent 40px 307px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.100) 0 34px, transparent 34px 211px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.078) 0 28px, transparent 28px 137px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.058) 0 22px, transparent 22px  89px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.047) 0 18px, transparent 18px  61px);
+    repeating-linear-gradient(90deg, transparent 0  24px, rgba(var(--twr),.041)  24px  26px, transparent  26px 419px),
+    repeating-linear-gradient(90deg, transparent 0  90px, rgba(var(--twr),.093)  90px 136px, transparent 136px 563px),
+    repeating-linear-gradient(90deg, transparent 0 210px, rgba(var(--twr),.111) 210px 250px, transparent 250px 307px),
+    repeating-linear-gradient(90deg, transparent 0 156px, rgba(var(--twr),.089) 156px 190px, transparent 190px 211px),
+    repeating-linear-gradient(90deg, transparent 0 106px, rgba(var(--twr),.070) 106px 134px, transparent 134px 137px),
+    repeating-linear-gradient(90deg, transparent 0   8px, rgba(var(--twr),.052)   8px  30px, transparent  30px  89px),
+    repeating-linear-gradient(90deg, transparent 0  17px, rgba(var(--twr),.042)  17px  35px, transparent  35px  61px);
   background-size:100% 306px, 100% 268px, 100% 232px, 100% 180px, 100% 132px, 100% 88px, 100% 68px;
   translate:0 -18vh;
 }
