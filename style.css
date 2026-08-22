@@ -834,3 +834,50 @@ body.reading{
   letter-spacing:.2em; color:var(--dim); text-transform:uppercase;
 }
 .pn.next{ text-align:right }
+
+/* ---------------- SVETILEC 00 ----------------
+   The layer sits at z-index 0 and every section at z-index 1, so the rig can
+   never cover content — it passes behind painted things like a vehicle behind
+   a building. clip-path keeps it out of the sticky nav's strip. */
+main section, .hud, footer.outro{ position:relative; z-index:1 }
+.rig-layer{
+  position:fixed; inset:0; z-index:0;
+  pointer-events:none; contain:strict; overflow:hidden;
+  clip-path:inset(48px 0 0 0);
+}
+.rig{
+  position:absolute; top:0; left:0;
+  opacity:0; transition:opacity 700ms ease;
+  will-change:transform;
+}
+.rig-body{
+  position:relative; width:100%; height:100%;
+  background-repeat:no-repeat;
+  background-size:400% 100%;
+  filter:saturate(.85);
+}
+.rig-beacon{                     /* sits over the beacon painted in the sprite */
+  position:absolute; left:60%; top:14%;
+  width:18%; height:18%; border-radius:50%;
+  background:radial-gradient(circle, var(--magenta), transparent 70%);
+  opacity:.25; pointer-events:none;
+}
+.rig-under{
+  position:absolute; left:16%; right:16%; bottom:14%;
+  height:24%; border-radius:50%;
+  background:radial-gradient(ellipse, rgba(157,190,242,.45), transparent 72%);
+  filter:blur(4px); pointer-events:none;
+}
+.rig-cone{
+  position:absolute; right:2%; top:62%;
+  width:46%; height:110%;
+  background:linear-gradient(190deg, rgba(157,190,242,.22), transparent 68%);
+  filter:blur(3px); mix-blend-mode:screen;
+  opacity:0; transition:opacity 700ms ease; pointer-events:none;
+}
+/* the rig has nowhere safe to fly on a short screen, so it stays away */
+@media (max-width:640px){ .rig-layer{ display:none } }
+@media (prefers-reduced-motion: reduce){
+  .rig{ transition:none }
+  .rig-beacon, .rig-cone, .rig-under{ display:none }
+}

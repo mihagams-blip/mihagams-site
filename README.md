@@ -36,6 +36,29 @@ files. Node is not required to run or deploy.
 | `node tools/shot.mjs <url> <out.png> [js] [waitMs]` | Screenshots a page in a throwaway Chrome profile, optionally after running a snippet — this is how the in-game project cards were captured. |
 | `node tools/probe.mjs <url> <js> [waitMs]` | Evaluates an expression in a fresh profile and prints the result. Use it instead of the browser console: a stale cached `main.js` has more than once made working code look broken. |
 | `python3 tools/make-dust.py` | Regenerates `assets/dust.webp`, the shelf's dust-puff mask. |
+| `python3 tools/import-rig.py <sheet.png>` | Normalises a generated SVETILEC sprite sheet into `assets/svetilec.webp` — four identical square cells at one shared scale, so the rig never jumps when it swaps pose. |
+
+## SVETILEC 00
+
+A municipal sign-maintenance rig works the empty bands between sections. It
+crosses at ~34 px/s, stops once or twice to check that a heading still lights
+(work light on, a soft cone under it), and after its third job — or six
+minutes — it makes one fast, dark, strut-down run and does not come back that
+session. It went home.
+
+Three things keep it from ever being a nuisance:
+
+- the layer is `z-index: 0` while every section is `z-index: 1`, so it is
+  structurally incapable of covering content — it slides *behind* cards the
+  way a vehicle passes behind a building;
+- it only flies in gaps tall enough to leave clear air above and below, and is
+  disabled below 640px, so on a cramped screen it simply has nowhere to be;
+- it never reacts to the pointer. `pointer-events: none`, no hover, not
+  focusable, `aria-hidden`. It is on the clock, not performing.
+
+Under `prefers-reduced-motion` it is one parked still with no timers at all,
+and `?static=1` never constructs it or fetches the sprite. The sprite itself
+is only fetched when the first crossing begins, so it costs nothing at load.
 
 ## Running locally
 
