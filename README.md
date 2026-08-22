@@ -37,6 +37,23 @@ files. Node is not required to run or deploy.
 | `node tools/probe.mjs <url> <js> [waitMs]` | Evaluates an expression in a fresh profile and prints the result. Use it instead of the browser console: a stale cached `main.js` has more than once made working code look broken. |
 | `python3 tools/make-dust.py` | Regenerates `assets/dust.webp`, the shelf's dust-puff mask. |
 | `python3 tools/import-rig.py <sheet.png>` | Normalises a generated SVETILEC sprite sheet into `assets/svetilec.webp` — four identical square cells at one shared scale, so the rig never jumps when it swaps pose. |
+| `python3 tools/import-ronin.py <sheet.png>` | Same for the ronin's three poses, but aligned on their BOTTOM edge — his dangling foot is the anchor the eye tracks, so centring would make him twitch. |
+
+## The ronin on the shelf
+
+A cyberpunk samurai sits on the Books heading as if the rule under it were a
+cliff edge: near leg tucked, far leg hanging 46px below the line. Every 15
+seconds he raises the pipe, tips his head back and lets go of a puff of smoke.
+
+Not a GIF — three poses in one sheet, cycled by CSS `steps()`, so the rhythm is
+a number you can change and the whole thing drops to a single still frame under
+`prefers-reduced-motion`. The smoke reuses `assets/dust.webp`, the shelf's own
+mask.
+
+One thing worth knowing if you touch it: the puff is a **flat fill shaped by
+the mask**, not a radial gradient under a mask. Layering a fading gradient
+beneath a wispy mask attenuates the alpha twice and the smoke simply vanishes
+on a dark page.
 
 ## SVETILEC 00
 

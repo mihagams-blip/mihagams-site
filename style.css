@@ -887,13 +887,34 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
    hanging over the edge. Three poses in one sheet — idle, draw, exhale —
    cycled on a long timer rather than a GIF, so the rhythm is tunable and the
    whole thing can be switched off for reduced motion. */
-.books-head{ position:relative; padding-right:190px }
-@media (max-width:760px){ .books-head{ padding-right:0 } }
+.books-head{ margin-bottom:44px }
+
+/* The heading's underline is his ledge: he sits on it right after the word,
+   near leg tucked, far leg hanging over the edge into the space below. */
+.books-title{
+  position:relative;
+  display:flex; align-items:flex-end; gap:14px;
+  padding-bottom:0;
+}
+.books-title::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg,
+    var(--sodium-hi) 0%,
+    color-mix(in srgb, var(--sodium) 45%, transparent) 42%,
+    transparent 92%);
+}
+.books-title h2{ margin:0 }
 
 .ronin{
-  position:absolute; right:0; bottom:-6px;
-  width:170px; height:170px;
+  position:relative;
+  width:124px; height:124px;
+  margin-bottom:-46px;          /* the leg hangs below the ledge */
+  flex:0 0 auto;
   pointer-events:none;
+  z-index:1;
+}
+@media (max-width:760px){
+  .ronin{ width:96px; height:96px; margin-bottom:-34px }
 }
 .ronin-body{
   position:absolute; inset:0;
@@ -914,10 +935,12 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
 /* smoke: the shelf's own dust texture, tinted and rising from the pipe */
 .ronin-smoke{ position:absolute; inset:0; pointer-events:none }
 .ronin-smoke i{
-  position:absolute; left:34%; top:34%;
-  width:56px; height:56px; opacity:0;
-  background:radial-gradient(circle at 45% 45%,
-    rgba(220,210,230,.85) 0%, rgba(157,190,242,.4) 45%, transparent 78%);
+  position:absolute; left:24%; top:4%;    /* level with his mask, not his chest */
+  width:88px; height:88px; opacity:0;
+  /* flat fill shaped by the mask — layering a fading gradient UNDER a wispy
+     mask attenuates twice and the smoke disappears on a dark page */
+  background:linear-gradient(180deg, #E9E3F2, #A9BEE8);
+  mix-blend-mode:screen;
   -webkit-mask-image:url("assets/dust.webp"); mask-image:url("assets/dust.webp");
   -webkit-mask-size:200% 200%; mask-size:200% 200%;
   -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
@@ -943,10 +966,10 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   .ronin-smoke i:nth-child(2){ animation-delay:.35s }
   .ronin-smoke i:nth-child(3){ animation-delay:.7s }
   @keyframes ronin-puff{
-    0%,  76%  { opacity:0; transform:translate3d(0,0,0) rotate(0) scale(.3) }
-    80%       { opacity:.55 }
-    92%, 100% { opacity:0; transform:translate3d(var(--dx),-58px,0)
-                                     rotate(var(--rot)) scale(1.9) }
+    0%,  76%  { opacity:0; transform:translate3d(0,0,0) rotate(0) scale(.28) }
+    80%       { opacity:.62 }
+    92%, 100% { opacity:0; transform:translate3d(var(--dx),-46px,0)
+                                     rotate(var(--rot)) scale(1.75) }
   }
 }
 @media (prefers-reduced-motion: reduce){
