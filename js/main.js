@@ -5,6 +5,15 @@
     new URLSearchParams(location.search).has("static");
   var SAVE = navigator.connection && navigator.connection.saveData;
 
+  /* .sky is pure CSS and cannot read a query string, so it was the one motion
+     system that ignored ?static=1 — the switch is documented as freezing the
+     page, and it has to stay true for every layer or it is not a switch. This
+     is the whole cost of keeping that promise: one attribute, no timer, no
+     listener, and the CSS side falls back to the composed still. */
+  if (new URLSearchParams(location.search).has("static")) {
+    document.documentElement.setAttribute("data-static", "");
+  }
+
   /* ---- Hero video: near-viewport + idle + never for reduced/saveData ---- */
   var loop = document.getElementById("loop");
   var plate = document.getElementById("plate");

@@ -1043,19 +1043,30 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   translate:0 -44vh;
 }
 
-/* --- 5. the hero's own scanline, verbatim. It dithers the conic gradients and
-       ties this layer to the video. It does not move. --- */
+/* --- 5. the hero's own scanline — same gradient, same multiply, same .45, so
+       "verbatim" is literally true and stays checkable against `.grain` at
+       style.css:77. It dithers the conic gradients and ties this layer to the
+       video. It does not move. --- */
 .sky-grain{
   inset:0;
   background-image:repeating-linear-gradient(to bottom,
     rgba(0,0,0,.16) 0 1px, transparent 2px 4px);
+  mix-blend-mode:multiply; opacity:.45;   /* the hero's .grain, blend and all */
 }
 
-/* three of the five planes carry a mask or a conic raster; a phone need not pay
-   for them, and the rig is already display:none below 640px */
-@media (max-width:640px){ .sky > i.sky-beams, .sky > i.sky-grain{ display:none } }
+/* Drop the two EXPENSIVE planes on a phone: .sky-stars is 26 tiled radial
+   gradients behind a mask, and .sky-beams is three conic rasters behind
+   another. .sky-grain stays — it is a single cheap gradient and it is the
+   texture. (This rule used to drop beams and grain, which was half wrong: it
+   kept the most expensive plane and dropped the cheapest.) The rig is already
+   display:none below 640px for its own reasons. */
+@media (max-width:640px){ .sky > i.sky-stars, .sky > i.sky-beams{ display:none } }
 /* free, and honours the Save-Data ethic the JS layers already keep */
 @media (prefers-reduced-data: reduce){ .sky{ display:none } }
+/* ?static=1 means the page is frozen — every layer, not just the JS ones.
+   With the animations off the base rules take over, so static mode shows the
+   same composed still that reduced-motion and Firefox get. */
+html[data-static] .sky, html[data-static] .sky > i{ animation:none }
 
 /* ---- the descent. Same construction as the shelf's scroll animation.
    Everything above is already the 100% frame, so a browser without
@@ -1394,7 +1405,9 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
 }
 @media (prefers-reduced-motion: reduce){
   .zenko-body{ animation:none; background-position:0 0 }
-  .zenko-halo{ animation:none; opacity:.45 }
+  /* .40, not the animated resting .34: a still has no breath to carry it, so it
+     gets a hint of the swell baked in. Deliberate — re-base it if .34 moves. */
+  .zenko-halo{ animation:none; opacity:.40 }
   .zenko-motes{ display:none }
 }
 

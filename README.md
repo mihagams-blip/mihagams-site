@@ -121,7 +121,10 @@ Three things keep it from ever being a nuisance:
   focusable, `aria-hidden`. It is on the clock, not performing.
 
 Under `prefers-reduced-motion` it is one parked still with no timers at all,
-and `?static=1` never constructs it or fetches the sprite. The sprite itself
+and `?static=1` never constructs it or fetches the sprite.
+`.sky` is pure CSS and cannot read a query string, so `main.js` sets
+`data-static` on `<html>` and one rule turns its animations off — the switch is
+documented as freezing the page and has to stay true for every layer. The sprite itself
 is only fetched when the first crossing begins, so it costs nothing at load.
 
 ## The city continues
@@ -172,9 +175,13 @@ and because the bands repeat in fixed px while the element scales with the
 viewport, a wider screen simply puts more coincidences on screen: 3440x1440
 measured L 0.01080 and a contrast of 4.475:1 — over this ceiling and *under
 AA* — while 1280x800 measured 4.58 and looked fine. A spot-check at one width
-structurally cannot see this. `scratchpad/sweep.mjs` drives the whole sweep in
-one Chrome session using CDP device-metrics emulation, which also gets past the
-~500px minimum window width headless Chrome enforces on macOS.
+structurally cannot see this. `tools/sweep.mjs` drives it — one Chrome per width,
+with a timeout on every CDP call, using device-metrics emulation to get past
+the ~500px minimum window width headless Chrome enforces on macOS. It ran as a
+single shared session once; one hung call killed the process with "unsettled
+top-level await" after the 1280 pass, silently dropping the two widest
+viewports the sweep exists to cover. A verification tool that can fail
+invisibly is worse than none.
 
 The first pass came in at max L 0.00852 / 4.65:1 but only 17% structure, and
 Miha could not see it at all on a 15-inch laptop — "barely noticeable" had
