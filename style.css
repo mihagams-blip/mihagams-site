@@ -976,3 +976,65 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   .ronin-body{ animation:none; background-position:0 0 }
   .ronin-smoke{ display:none }
 }
+
+/* ---------------- NOW PLAYING ----------------
+   The tile whose track is playing comes alive; every other tile stays
+   still. audio.js already flips .is-playing on every control for a track
+   and clears it on pause or when another track starts, so this is purely
+   a matter of what that class is allowed to switch on. */
+
+/* the cover drifts in, very slowly, and lifts its colour a touch */
+.fc-art img{ transition:transform 1200ms ease, filter 900ms ease }
+.fcard-btn.is-playing .fc-art img{
+  transform:scale(1.07);
+  filter:saturate(1.18) brightness(1.06);
+}
+
+/* a light crawls across the art on a long loop */
+.fc-sheen{
+  position:absolute; inset:0; opacity:0; pointer-events:none;
+  background:linear-gradient(108deg,
+    transparent 38%,
+    rgba(255,255,255,.16) 50%,
+    transparent 62%);
+  mix-blend-mode:screen;
+  transition:opacity 500ms ease;
+}
+.fcard-btn.is-playing .fc-sheen{ opacity:1; animation:fc-sheen 4.5s linear infinite }
+@keyframes fc-sheen{
+  0%   { transform:translateX(-120%) }
+  100% { transform:translateX(120%) }
+}
+
+/* four bars, bottom-left, the small cousin of the skyline equaliser */
+.fc-eq{
+  position:absolute; left:10px; bottom:10px;
+  display:flex; align-items:flex-end; gap:3px;
+  height:20px; opacity:0; pointer-events:none;
+  transition:opacity 320ms ease;
+  filter:drop-shadow(0 0 6px rgba(217,107,168,.65));
+}
+.fc-eq i{ width:3px; height:30%; background:var(--magenta); display:block }
+.fcard-btn.is-playing .fc-eq{ opacity:1 }
+.fcard-btn.is-playing .fc-eq i{ animation:fc-bar 900ms ease-in-out infinite }
+.fcard-btn.is-playing .fc-eq i:nth-child(2){ animation-duration:640ms; animation-delay:-120ms }
+.fcard-btn.is-playing .fc-eq i:nth-child(3){ animation-duration:1080ms; animation-delay:-260ms }
+.fcard-btn.is-playing .fc-eq i:nth-child(4){ animation-duration:760ms; animation-delay:-60ms }
+@keyframes fc-bar{
+  0%,100%{ height:26% }
+  50%    { height:100% }
+}
+
+/* and the frame itself takes the accent while it plays */
+.fcard-btn.is-playing{
+  border-color:var(--magenta);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--magenta) 45%, transparent),
+             0 16px 44px -20px color-mix(in srgb, var(--magenta) 80%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fc-art img{ transition:none }
+  .fcard-btn.is-playing .fc-art img{ transform:none; filter:saturate(1.18) }
+  .fcard-btn.is-playing .fc-sheen{ animation:none; opacity:.35 }
+  .fcard-btn.is-playing .fc-eq i{ animation:none; height:62% }
+}

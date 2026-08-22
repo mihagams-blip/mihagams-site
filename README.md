@@ -142,7 +142,12 @@ stylesheet at the same specificity as component states like `.card:hover` and
 every one of them.
 
 **Featured tracks.** Four tracks carry `featured: true` and get a cover card
-above the list. Move the flag to change which four. Drop the artwork in as
+above the list. The card whose track is playing lights up — the cover drifts in
+and gains saturation, a light crawls across it, four small equaliser bars run
+in the corner and the frame takes the magenta accent. It clears itself on
+pause and moves to the other card when another track starts, because it keys
+off the same `.is-playing` class `audio.js` already maintains on every control
+for a track; nothing extra tracks state. Move the flag to change which four. Drop the artwork in as
 `assets/covers/<id>.webp` (square, 600×600, ≤70 KB) and set `cover` +
 `coverAlt` on that track; until then the card shows a typographic
 placeholder. A featured track keeps its list row — both controls share one

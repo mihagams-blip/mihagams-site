@@ -59,7 +59,10 @@ const featuredTracks = TRACKS.filter((t) => t.featured).map((tr) => {
     ? `<span class="fc-for">for ${esc(titleOf[tr.projectId])}</span>` : '';
   return `<li class="fcard">` +
     `<button class="fcard-btn track" data-track="${tr.id}" aria-pressed="false" aria-label="${esc(label)}">` +
-    `<span class="fc-art">${art}<span class="fc-play t-btn" aria-hidden="true">${ICON_PLAY_LG}</span></span>` +
+    `<span class="fc-art">${art}` +
+      `<span class="fc-sheen" aria-hidden="true"></span>` +
+      `<span class="fc-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>` +
+      `<span class="fc-play t-btn" aria-hidden="true">${ICON_PLAY_LG}</span></span>` +
     `<span class="fc-meta"><span class="fc-title">${esc(tr.title)}</span>` +
     `<span class="fc-sub">${esc(tr.genre || '')}${tr.genre ? ' · ' : ''}${tr.duration}</span></span>` +
     `</button>${chip}</li>`;
