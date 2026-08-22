@@ -927,8 +927,8 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   --st:  220,210,230;                    /* --text   — the stars */
 
   /* the sodium ground glow is ATMOSPHERE, not an object: it never parallaxes */
-  background-image:radial-gradient(140% 62% at 50% 116%,
-    rgba(var(--hz),.070), rgba(var(--hz),.026) 38%, transparent 70%);
+  background-image:radial-gradient(150% 66% at 50% 126%,
+    rgba(var(--hz),.066), rgba(var(--hz),.026) 38%, transparent 70%);
   opacity:var(--sky-gain);
 }
 /* NB the child selector is (0,1,1) — MORE specific than a bare `.sky-stars`
@@ -980,17 +980,17 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
        silhouette repeats every ~1.1e16 px and can never be seen to tile.
        Shorter band = farther = fainter, which is atmospheric perspective. --- */
 .sky-far{
-  left:-6%; right:-6%; bottom:-18vh; height:64vh;
+  left:-6%; right:-6%; bottom:-18vh; height:72vh;
   background-position:left bottom;
   background-image:
-    repeating-linear-gradient(90deg, rgba(var(--twr),.038) 0  2px, transparent  2px 419px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.088) 0 46px, transparent 46px 563px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.105) 0 40px, transparent 40px 307px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.082) 0 34px, transparent 34px 211px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.062) 0 28px, transparent 28px 137px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.044) 0 22px, transparent 22px  89px),
-    repeating-linear-gradient(90deg, rgba(var(--twr),.036) 0 18px, transparent 18px  61px);
-  background-size:100% 214px, 100% 190px, 100% 166px, 100% 128px, 100% 94px, 100% 62px, 100% 48px;
+    repeating-linear-gradient(90deg, rgba(var(--twr),.046) 0  2px, transparent  2px 419px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.104) 0 46px, transparent 46px 563px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.124) 0 40px, transparent 40px 307px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.100) 0 34px, transparent 34px 211px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.078) 0 28px, transparent 28px 137px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.058) 0 22px, transparent 22px  89px),
+    repeating-linear-gradient(90deg, rgba(var(--twr),.047) 0 18px, transparent 18px  61px);
+  background-size:100% 306px, 100% 268px, 100% 232px, 100% 180px, 100% 132px, 100% 88px, 100% 68px;
   translate:0 -18vh;
 }
 
@@ -1003,9 +1003,9 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   left:0; right:0; bottom:-30vh; height:118vh;
   background-size:100% 100%;
   background-image:
-    conic-gradient(from 359deg at 14% 104%, transparent 0 2deg, rgba(var(--bm),.048) 5deg, transparent  9deg 360deg),
-    conic-gradient(from  16deg at 45% 106%, transparent 0 2deg, rgba(var(--bm),.036) 5deg, transparent 10deg 360deg),
-    conic-gradient(from  28deg at 76% 105%, transparent 0 1deg, rgba(var(--hz),.032) 4deg, transparent  8deg 360deg);
+    conic-gradient(from 357deg at 14% 104%, transparent 0 2deg, rgba(var(--bm),.056) 6deg, transparent 12deg 360deg),
+    conic-gradient(from  14deg at 45% 106%, transparent 0 2deg, rgba(var(--bm),.044) 6deg, transparent 13deg 360deg),
+    conic-gradient(from  26deg at 76% 105%, transparent 0 1deg, rgba(var(--hz),.038) 5deg, transparent 11deg 360deg);
   /* dark at the apex — the shaft is hidden by the buildings it rises from.
      This is also what keeps the brightest beam pixel off the glow's peak. */
   -webkit-mask-image:linear-gradient(0deg,transparent 0 18%,rgba(0,0,0,.55) 32%,#000 46%,transparent 88%);
@@ -1020,9 +1020,9 @@ main section, .hud, footer.outro{ position:relative; z-index:1 }
   left:-4%; right:-4%; bottom:-44vh; height:74vh;
   background-position:left bottom;
   background-image:
-    repeating-linear-gradient(90deg, rgba(10,7,16,.62) 0 58px, transparent 58px 271px),
-    repeating-linear-gradient(90deg, rgba(10,7,16,.48) 0 44px, transparent 44px 163px);
-  background-size:100% 112px, 100% 74px;
+    repeating-linear-gradient(90deg, rgba(6,3,10,.92) 0 58px, transparent 58px 271px),
+    repeating-linear-gradient(90deg, rgba(6,3,10,.74) 0 44px, transparent 44px 163px);
+  background-size:100% 168px, 100% 112px;
   translate:0 -44vh;
 }
 

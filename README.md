@@ -161,7 +161,26 @@ background, *the sky is the background of that body text*. Solving for where
 > **No pixel of `.sky` may exceed relative luminance L = 0.0105.**
 
 Every alpha in the block is picked against it. Measured on the isolated layer:
-max L 0.00852, worst text contrast 4.65:1, median = plain ink. Two structural
+max L 0.00889, worst text contrast 4.62:1, median = plain ink, and 24% of the
+frame carries visible structure.
+
+The first pass came in at max L 0.00852 / 4.65:1 but only 17% structure, and
+Miha could not see it at all on a 15-inch laptop — "barely noticeable" had
+overshot into invisible. `--sky-gain` was already 1, so the fix was not a dial.
+Three moves bought visibility, and the first two are free:
+
+1. **Taller towers.** Height puts more silhouette on screen and costs no peak
+   luminance at all.
+2. **Deeper rooftops.** The near plane is painted in ink, so making it *darker*
+   carves structure with negative luminance — it improves text contrast rather
+   than spending it. This is the lever to reach for first.
+3. A modest alpha lift on the tower bands, and **wider** rather than brighter
+   searchlights — area is free, peak is not.
+
+The sodium glow is the single brightest thing in the layer and therefore the
+one thing that must not grow: it was pushed *down* (`at 50% 126%`) so its hot
+core sits below the fold. Raising it from .070 to .076 alone cost 0.11 of
+contrast for no structural gain, which is the whole trade in one number. Two structural
 properties rather than luck hold that line: the beam mask is transparent
 across its bottom 18% (the shaft is hidden by the buildings it rises from), so
 the brightest beam pixel can never land on the brightest glow pixel; and the
